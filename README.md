@@ -46,3 +46,29 @@ graph TD
     H --> I{Atrasado?}
     I -->|Sim| J[Calcular Multa]
     I -->|Não| K[Finalizar e Liberar Livro]
+
+## 🛠️ Conceitos de POO Aplicados
+
+Este projeto foi estruturado utilizando os pilares fundamentais da Programação Orientada a Objetos, conforme implementado nos arquivos fonte:
+
+1. **Herança:** A classe `Book.java` estende uma classe base (como `LibraryItem`), herdando comportamentos e atributos comuns. Isso permite que o sistema seja expandido para outros tipos de mídia (revistas, DVDs) sem duplicar código.
+2. **Encapsulamento:** Os dados em `User.java`, `Book.java` e `Loan.java` são protegidos por modificadores de acesso `private`. O acesso a esses dados é feito estritamente através de métodos *Getters* e *Setters*, garantindo a validação e integridade das informações.
+3. **Polimorfismo:** Utilizado através da sobrescrita de métodos (`@Override`). A classe `Book`, por exemplo, provê sua própria implementação para métodos de exibição de detalhes e verificação de disponibilidade.
+4. **Abstração:** O sistema utiliza classes e interfaces para representar entidades do mundo real (Livro, Usuário, Empréstimo), focando apenas nos atributos e comportamentos essenciais para a regra de negócio da biblioteca.
+5. **Persistência com Serialização:** O uso da interface `Serializable` e da classe `DataManager` demonstra o conceito de salvar o estado de objetos em arquivos binários (`.dat`), permitindo que os dados persistam entre diferentes execuções do programa.
+
+## 📦 Como Executar
+
+Siga os passos abaixo para rodar o projeto em seu ambiente local:
+
+1. **Pré-requisitos:**
+   - Possuir o **Java JDK 17** ou superior instalado.
+   - Uma IDE de sua preferência (IntelliJ, Eclipse ou VS Code).
+
+2. **Clonagem e Preparação:**
+   ```bash
+   # Clone o repositório
+   git clone [https://github.com/seu-usuario/nome-do-repositorio.git](https://github.com/seu-usuario/nome-do-repositorio.git)
+
+   # Entre na pasta do projeto
+   cd nome-do-repositorio
