@@ -1,74 +1,377 @@
-Sistema de gerenciamento de biblioteca desenvolvido em Java.
+# 📚 JavaLibrary - Sistema de Gerenciamento de Biblioteca
 
-
-## Integrantes
-- André Marcelino Watanabe - 14558311
-- Nome  - NUSP
-- Nome  - NUSP
-
-# 📚 JavaLibrary - Sistema de Gestão de Biblioteca
-
-![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
+![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
 ![Swing](https://img.shields.io/badge/GUI-Swing-blue?style=for-the-badge)
+![POO](https://img.shields.io/badge/POO-Programação_Orientada_a_Objetos-success?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-Concluído-brightgreen?style=for-the-badge)
 
-## 🖥️ Sobre o Projeto
-O **JavaLibrary** é um sistema completo de automação para bibliotecas, desenvolvido como projeto prático para a disciplina de Programação Orientada a Objetos (POO). O sistema permite o gerenciamento de acervo, usuários e o controle rigoroso de empréstimos, incluindo o cálculo automático de multas por atraso.
+---
 
-## 🚀 Funcionalidades Principais
-- **Gestão de Acervo:** Cadastro, edição e consulta de livros (ISBN, Autor, Título, Ano).
-- **Controle de Usuários:** Cadastro de alunos vinculado ao RA e dados de contato.
-- **Sistema de Empréstimos:** - Registro de saída com data de devolução automática (prazo de 14 dias).
-    - Verificação de disponibilidade de exemplares.
-- **Cálculo de Multas:** O sistema identifica automaticamente livros em atraso e calcula o valor devido (R$ 2,00 por dia).
-- **Persistência de Dados:** Todos os dados são salvos em um arquivo binário (`biblioteca_dados.dat`), garantindo que as informações não se percam ao fechar o app.
+# 📖 Sobre o Projeto
 
-## 🎨 Mockups e Interface
-Abaixo estão as capturas de tela da interface desenvolvida em Java Swing:
+O **JavaLibrary** é um sistema completo de gerenciamento de biblioteca desenvolvido em **Java** utilizando **Swing** para a interface gráfica.  
 
-| Dashboard / Livros | Gerenciar Usuários | Tela de Checkout |
-| :---: | :---: | :---: |
-| ![Livros](link_da_sua_imagem_1) | ![Usuarios](link_da_sua_imagem_2) | ![Checkout](link_da_sua_imagem_3) |
+O projeto foi criado com foco na aplicação prática dos conceitos de **Programação Orientada a Objetos (POO)**, incluindo:
 
-> *Nota: Substitua os links acima pelas imagens que você salvou no repositório.*
+- Herança
+- Encapsulamento
+- Polimorfismo
+- Abstração
+- Persistência de dados
+- Separação entre interface e regras de negócio
 
-## 🔄 Fluxograma do Processo
-O fluxo de operação do sistema segue a lógica de validação de disponibilidade e status do aluno:
+O sistema permite o gerenciamento de:
+
+- 📚 Livros
+- 👨‍🎓 Usuários
+- 🔄 Empréstimos
+- 💰 Multas
+- 📊 Relatórios
+- 🔐 Controle de permissões
+
+---
+
+# 👨‍💻 Integrantes
+
+| Nome | NUSP |
+|---|---|
+| André Marcelino Watanabe | 14558311 |
+| PREENCHER | PREENCHER |
+| PREENCHER | PREENCHER |
+
+---
+
+# 🖥️ Interface do Sistema
+
+A interface foi desenvolvida utilizando **Java Swing**, organizada em abas e formulários separados para melhorar a experiência do usuário e evitar poluição visual na tela principal.
+
+## 📷 Capturas de Tela
+
+| Dashboard / Livros | Gerenciar Usuários |
+| :---: | :---: |
+| ![Dashboard](images/dashboard.png) | ![Usuários](images/usuarios.png) |
+
+| Tela de Empréstimos | Tela de Login |
+| :---: | :---: |
+| ![Emprestimos](images/emprestimos.png) | ![Login](images/login.png) |
+
+> ⚠️ Substitua os caminhos acima pelas imagens reais do projeto dentro do repositório.
+
+---
+
+# 🚀 Funcionalidades Principais
+
+## 📚 Gestão de Livros
+
+- Cadastro de livros
+- Edição de livros
+- Exclusão de livros
+- Busca por:
+  - Título
+  - Autor
+  - ISBN
+  - Gênero
+
+---
+
+## 👨‍🎓 Gestão de Usuários
+
+- Cadastro de usuários
+- Edição de usuários
+- Exclusão de usuários
+- Busca por:
+  - Nome
+  - ID/RA
+
+---
+
+## 🔄 Sistema de Empréstimos
+
+- Empréstimos com prazo automático de **14 dias**
+- Controle de disponibilidade de exemplares
+- Devolução de livros
+- Atualização automática da disponibilidade
+
+---
+
+## 💰 Sistema de Multas
+
+- Cálculo automático de multas
+- Valor:
+  - **R$ 2,00 por dia de atraso**
+- Verificação automática de atraso
+
+---
+
+## 📊 Relatórios
+
+O sistema gera relatórios de:
+
+- Empréstimos ativos
+- Empréstimos atrasados
+- Histórico por usuário
+- Empréstimos do dia
+
+---
+
+## 🔐 Controle de Acesso
+
+O sistema possui dois níveis de acesso:
+
+| Perfil | Permissões |
+|---|---|
+| Administrador | Controle total do sistema |
+| Bibliotecário | Consulta, empréstimos e devoluções |
+
+---
+
+## 💾 Persistência de Dados
+
+Todos os dados são armazenados em arquivo utilizando serialização Java.
+
+Arquivo utilizado:
+
+```text
+biblioteca_dados.dat
+```
+
+Isso garante que os dados permaneçam salvos mesmo após o fechamento da aplicação.
+
+---
+
+# 🧠 Estrutura do Projeto
+
+## 📂 Principais Classes
+
+| Classe | Responsabilidade |
+|---|---|
+| `LibraryItem` | Classe abstrata base |
+| `Book` | Representa os livros |
+| `Student` | Representa os usuários |
+| `Loan` | Representa os empréstimos |
+| `Library` | Regras de negócio |
+| `DataManager` | Persistência dos dados |
+| `LibraryController` | Comunicação entre UI e lógica |
+| `LibraryUI` | Interface gráfica |
+| `LoginDialog` | Tela de login |
+| `Main` | Inicialização do sistema |
+
+---
+
+# 🛠️ Conceitos de POO Aplicados
+
+## 1️⃣ Herança
+
+A classe `Book` herda características da classe abstrata `LibraryItem`, permitindo reutilização de código e futura expansão para outros tipos de mídia.
+
+---
+
+## 2️⃣ Encapsulamento
+
+Os atributos das classes são protegidos com modificadores `private`, sendo acessados através de getters e setters.
+
+---
+
+## 3️⃣ Polimorfismo
+
+Métodos sobrescritos utilizando `@Override` permitem comportamentos específicos para diferentes entidades do sistema.
+
+---
+
+## 4️⃣ Abstração
+
+As classes representam entidades reais da biblioteca focando apenas nos comportamentos essenciais.
+
+---
+
+## 5️⃣ Persistência com Serialização
+
+A interface `Serializable` é utilizada para salvar objetos em arquivos binários.
+
+---
+
+# 🔄 Fluxograma do Sistema
+
+## 📌 Processo de Empréstimo e Devolução
 
 ```mermaid
-graph TD
-    A[Início: Dashboard] --> B{Ação do Usuário}
-    B -->|Consulta| C[Pesquisar Livro]
-    B -->|Empréstimo| D[Selecionar Livro e Aluno]
-    D --> E{Há exemplares?}
-    E -->|Sim| F[Gerar Empréstimo]
-    E -->|Não| G[Aviso: Indisponível]
-    B -->|Devolução| H[Verificar Data]
-    H --> I{Atrasado?}
-    I -->|Sim| J[Calcular Multa]
-    I -->|Não| K[Finalizar e Liberar Livro]
+flowchart TD
 
-## 🛠️ Conceitos de POO Aplicados
+    A([Início]) --> B{Escolha da ação}
 
-Este projeto foi estruturado utilizando os pilares fundamentais da Programação Orientada a Objetos, conforme implementado nos arquivos fonte:
+    B -->|Consultar Livro| C[Pesquisar Livro]
+    C --> D[Exibir Resultados]
 
-1. **Herança:** A classe `Book.java` estende uma classe base (como `LibraryItem`), herdando comportamentos e atributos comuns. Isso permite que o sistema seja expandido para outros tipos de mídia (revistas, DVDs) sem duplicar código.
-2. **Encapsulamento:** Os dados em `User.java`, `Book.java` e `Loan.java` são protegidos por modificadores de acesso `private`. O acesso a esses dados é feito estritamente através de métodos *Getters* e *Setters*, garantindo a validação e integridade das informações.
-3. **Polimorfismo:** Utilizado através da sobrescrita de métodos (`@Override`). A classe `Book`, por exemplo, provê sua própria implementação para métodos de exibição de detalhes e verificação de disponibilidade.
-4. **Abstração:** O sistema utiliza classes e interfaces para representar entidades do mundo real (Livro, Usuário, Empréstimo), focando apenas nos atributos e comportamentos essenciais para a regra de negócio da biblioteca.
-5. **Persistência com Serialização:** O uso da interface `Serializable` e da classe `DataManager` demonstra o conceito de salvar o estado de objetos em arquivos binários (`.dat`), permitindo que os dados persistam entre diferentes execuções do programa.
+    B -->|Realizar Empréstimo| E[Selecionar Livro e Usuário]
+    E --> F{Livro Disponível?}
 
-## 📦 Como Executar
+    F -->|Sim| G[Gerar Empréstimo]
+    G --> H[Definir Prazo de 14 Dias]
+    H --> I[Atualizar Quantidade]
+    I --> J([Empréstimo Finalizado])
 
-Siga os passos abaixo para rodar o projeto em seu ambiente local:
+    F -->|Não| K[Exibir Mensagem de Indisponibilidade]
 
-1. **Pré-requisitos:**
-   - Possuir o **Java JDK 17** ou superior instalado.
-   - Uma IDE de sua preferência (IntelliJ, Eclipse ou VS Code).
+    B -->|Realizar Devolução| L[Selecionar Empréstimo]
+    L --> M{Está Atrasado?}
 
-2. **Clonagem e Preparação:**
-   ```bash
-   # Clone o repositório
-   git clone [https://github.com/seu-usuario/nome-do-repositorio.git](https://github.com/seu-usuario/nome-do-repositorio.git)
+    M -->|Sim| N[Calcular Multa]
+    N --> O[Registrar Pagamento]
 
-   # Entre na pasta do projeto
-   cd nome-do-repositorio
+    M -->|Não| P[Liberar Livro]
+
+    O --> Q[Atualizar Disponibilidade]
+    P --> Q
+
+    Q --> R([Devolução Finalizada])
+```
+
+---
+
+# 🧪 Plano de Testes
+
+## ✅ Testes Manuais
+
+1. Entrar como administrador
+2. Cadastrar livro
+3. Editar livro
+4. Buscar livro
+5. Cadastrar usuário
+6. Editar usuário
+7. Buscar usuário
+8. Realizar empréstimo
+9. Verificar redução das cópias disponíveis
+10. Realizar devolução
+11. Verificar aumento das cópias disponíveis
+12. Abrir relatórios
+13. Testar permissões de usuário
+14. Reiniciar sistema e validar persistência
+
+---
+
+## 🤖 Testes Automáticos
+
+Executar:
+
+```bash
+java TestLibrary
+```
+
+O teste valida:
+
+- Empréstimos
+- Devoluções
+- Histórico
+- Multas
+- Prazo automático
+
+---
+
+# ✅ Resultados dos Testes
+
+Resultado esperado:
+
+```text
+Todos os testes passaram.
+```
+
+O sistema deve:
+
+- Cadastrar corretamente
+- Buscar corretamente
+- Emprestar corretamente
+- Devolver corretamente
+- Gerar relatórios corretamente
+- Exibir mensagens amigáveis em entradas inválidas
+
+---
+
+# ⚠️ Problemas Encontrados
+
+Durante o desenvolvimento foram encontrados alguns problemas importantes:
+
+- Falta de busca na primeira versão
+- Histórico não persistia corretamente
+- Problemas na devolução de empréstimos
+- Permissões não eram aplicadas corretamente
+- Necessidade de separação melhor da interface
+
+Todos os problemas foram corrigidos na versão final.
+
+---
+
+# 📦 Como Executar o Projeto
+
+## ✅ Pré-requisitos
+
+- Java JDK 17 ou superior
+
+---
+
+## ▶️ Compilação
+
+```bash
+javac *.java
+```
+
+---
+
+## ▶️ Execução
+
+```bash
+java Main
+```
+
+---
+
+# 🔐 Credenciais
+
+| Perfil | Login | Senha |
+|---|---|---|
+| Administrador | `admin` | `123` |
+| Bibliotecário | `user` | `123` |
+
+---
+
+# 📂 Estrutura de Pastas Recomendada
+
+```text
+📦 JavaLibrary
+ ┣ 📂 images
+ ┃ ┣ 📜 dashboard.png
+ ┃ ┣ 📜 usuarios.png
+ ┃ ┣ 📜 emprestimos.png
+ ┃ ┗ 📜 login.png
+ ┣ 📜 Main.java
+ ┣ 📜 Library.java
+ ┣ 📜 Book.java
+ ┣ 📜 Loan.java
+ ┣ 📜 Student.java
+ ┣ 📜 DataManager.java
+ ┣ 📜 LibraryUI.java
+ ┣ 📜 LibraryController.java
+ ┣ 📜 LoginDialog.java
+ ┣ 📜 README.md
+ ┗ 📜 biblioteca_dados.dat
+```
+
+---
+
+# 📌 Melhorias Futuras
+
+Possíveis melhorias futuras:
+
+- Integração com banco de dados
+- Criptografia de senhas
+- Testes automatizados com JUnit
+- Exportação de relatórios em PDF
+- Sistema de reservas online
+- Dashboard com gráficos estatísticos
+
+---
+
+# 📄 Licença
+
+Projeto desenvolvido para fins acadêmicos na disciplina de Programação Orientada a Objetos.
+
+---
