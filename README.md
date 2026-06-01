@@ -222,36 +222,7 @@ A interface `Serializable` foi utilizada para salvar os dados do sistema em arqu
 ## 📌 Processo de Empréstimo e Devolução
 
 ```mermaid
-flowchart TD
-
-    A([Início]) --> B{Escolha da ação}
-
-    B -->|Consultar Livro| C[Pesquisar Livro]
-    C --> D[Exibir Resultados]
-
-    B -->|Realizar Empréstimo| E[Selecionar Livro e Usuário]
-    E --> F{Livro Disponível?}
-
-    F -->|Sim| G[Gerar Empréstimo]
-    G --> H[Definir Prazo de 14 Dias]
-    H --> I[Atualizar Quantidade]
-    I --> J([Empréstimo Finalizado])
-
-    F -->|Não| K[Exibir Mensagem de Indisponibilidade]
-
-    B -->|Realizar Devolução| L[Selecionar Empréstimo]
-    L --> M{Está Atrasado?}
-
-    M -->|Sim| N[Calcular Multa]
-    N --> O[Registrar Atualização]
-
-    M -->|Não| P[Liberar Livro]
-
-    O --> Q[Atualizar Disponibilidade]
-    P --> Q
-
-    Q --> R([Devolução Finalizada])
-```
+A([Início]) --> B[Tela de Login] B --> C{Tipo de Usuário} C -->|Administrador| D[Painel Administrativo] C -->|Usuário Comum| E[Painel do Usuário] %% Administrador D --> F[Gerenciar Livros] D --> G[Gerenciar Usuários] D --> H[Realizar Empréstimos] D --> I[Realizar Devoluções] D --> J[Controlar Multas] D --> K[Gerar Relatórios] F --> Z[Fim] G --> Z H --> Z I --> Z J --> Z K --> Z %% Usuário E --> L[Consultar Livros] E --> M[Pesquisar Livros] E --> N[Visualizar Histórico] E --> O[Consultar Empréstimos] E --> P[Renovar Empréstimo] L --> Z M --> Z N --> Z O --> Z P --> Z Z([Encerrar Sessão])
 
 ---
 
