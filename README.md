@@ -80,17 +80,6 @@ Os mockups abaixo representam as principais telas do sistema.
 
 ---
 
-## 💰 Tela de Controle de Multas
-
-![Tela Multas](mockups/7.png)
-
----
-
-## 📋 Tela Geral do Sistema
-
-![Tela Sistema](mockups/8.png)
-
----
 
 # 🚀 Funcionalidades Principais
 
