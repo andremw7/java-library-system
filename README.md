@@ -52,25 +52,25 @@ Os mockups abaixo representam as principais telas do sistema.
 
 ## 🔄 Tela de Empréstimos
 
-![Tela Empréstimos](mockups/2.png)
+![Tela Empréstimos](mockups/6.png)
 
 ---
 
 ## 📊 Tela de Relatórios
 
-![Tela Relatórios](mockups/3.png)
+![Tela Relatórios](mockups/7.png)
 
 ---
 
 ## 👨‍🎓 Tela de Usuários
 
-![Tela Usuários](mockups/4.png)
+![Tela Usuários](mockups/2.png)
 
 ---
 
 ## 🔐 Tela de Login
 
-![Tela Login](mockups/5.png)
+![Tela Login](mockups/login.png)
 
 ---
 
