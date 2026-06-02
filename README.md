@@ -215,8 +215,7 @@ As classes representam entidades reais da biblioteca focando apenas nas caracter
 
 A interface `Serializable` foi utilizada para salvar os dados do sistema em arquivos binários.
 
----
-# 🔄 Fluxograma do Sistema
+---# 🔄 Fluxograma do Sistema
 
 ## 📌 Fluxo Geral de Utilização
 
@@ -227,40 +226,79 @@ flowchart TD
 
     B --> C{Tipo de Usuário}
 
+    %% ADMINISTRADOR
+
     C -->|Administrador| D[Painel Administrativo]
-    C -->|Usuário Comum| E[Painel do Usuário]
 
-    %% Funcionalidades do Administrador
+    D --> E[Gerenciar Livros]
+    D --> F[Gerenciar Usuários]
+    D --> G[Realizar Empréstimo]
+    D --> H[Realizar Devolução]
+    D --> I[Gerar Relatórios]
 
-    D --> F[Gerenciar Livros]
-    D --> G[Gerenciar Usuários]
-    D --> H[Realizar Empréstimos]
-    D --> I[Realizar Devoluções]
-    D --> J[Controlar Multas]
-    D --> K[Gerar Relatórios]
+    %% EMPRÉSTIMO
 
-    %% Funcionalidades do Usuário
+    G --> J{Livro Disponível?}
 
-    E --> L[Consultar Livros]
-    E --> M[Pesquisar Livros]
-    E --> N[Visualizar Histórico]
-    E --> O[Consultar Empréstimos]
-    E --> P[Renovar Empréstimos]
+    J -->|Não| K[Empréstimo Negado]
 
-    %% Encerramento
+    J -->|Sim| L{Usuário Possui Multa Pendente?}
 
-    F --> Z([Encerrar Sessão])
-    G --> Z
-    H --> Z
-    I --> Z
-    J --> Z
-    K --> Z
+    L -->|Sim| M[Empréstimo Bloqueado]
 
-    L --> Z
-    M --> Z
-    N --> Z
-    O --> Z
-    P --> Z
+    L -->|Não| N[Registrar Empréstimo]
+    N --> O[Atualizar Quantidade Disponível]
+
+    %% DEVOLUÇÃO
+
+    H --> P{Livro Está Atrasado?}
+
+    P -->|Não| Q[Registrar Devolução]
+
+    P -->|Sim| R[Calcular Multa]
+    R --> S[Pagar Multa]
+    S --> Q
+
+    Q --> T[Atualizar Quantidade Disponível]
+
+    %% USUÁRIO COMUM
+
+    C -->|Usuário Comum| U[Painel do Usuário]
+
+    U --> V[Consultar Livros]
+    U --> W[Pesquisar Livros]
+    U --> X[Consultar Empréstimos]
+    U --> Y[Visualizar Histórico]
+    U --> Z[Renovar Empréstimo]
+
+    %% RENOVAÇÃO
+
+    Z --> AA{Empréstimo Vencido?}
+
+    AA -->|Sim| AB[Renovação Somente com Administrador]
+
+    AA -->|Não| AC{Mais de 2 Exemplares Disponíveis?}
+
+    AC -->|Não| AB
+
+    AC -->|Sim| AD[Renovar Empréstimo]
+
+    %% ENCERRAMENTO
+
+    E --> AE([Encerrar Sessão])
+    F --> AE
+    I --> AE
+    O --> AE
+    T --> AE
+
+    V --> AE
+    W --> AE
+    X --> AE
+    Y --> AE
+    AD --> AE
+    AB --> AE
+    K --> AE
+    M --> AE
 ```
 
 # 🧪 Plano de Testes
