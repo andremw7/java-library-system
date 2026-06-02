@@ -215,7 +215,7 @@ As classes representam entidades reais da biblioteca focando apenas nas caracter
 
 A interface `Serializable` foi utilizada para salvar os dados do sistema em arquivos binários.
 
----# 🔄 Fluxograma do Sistema
+## 🔄 Fluxograma do Sistema
 
 ## 📌 Fluxo Geral de Utilização
 
@@ -259,7 +259,7 @@ flowchart TD
     R --> S[Pagar Multa]
     S --> Q
 
-    Q --> T[Atualizar Quantidade Disponível]
+    Q --> O[Atualizar Quantidade Disponível]
 
     %% USUÁRIO COMUM
 
