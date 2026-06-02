@@ -216,15 +216,52 @@ As classes representam entidades reais da biblioteca focando apenas nas caracter
 A interface `Serializable` foi utilizada para salvar os dados do sistema em arquivos binários.
 
 ---
-
 # 🔄 Fluxograma do Sistema
 
-## 📌 Processo de Empréstimo e Devolução
+## 📌 Fluxo Geral de Utilização
 
 ```mermaid
-A([Início]) --> B[Tela de Login] B --> C{Tipo de Usuário} C -->|Administrador| D[Painel Administrativo] C -->|Usuário Comum| E[Painel do Usuário] %% Administrador D --> F[Gerenciar Livros] D --> G[Gerenciar Usuários] D --> H[Realizar Empréstimos] D --> I[Realizar Devoluções] D --> J[Controlar Multas] D --> K[Gerar Relatórios] F --> Z[Fim] G --> Z H --> Z I --> Z J --> Z K --> Z %% Usuário E --> L[Consultar Livros] E --> M[Pesquisar Livros] E --> N[Visualizar Histórico] E --> O[Consultar Empréstimos] E --> P[Renovar Empréstimo] L --> Z M --> Z N --> Z O --> Z P --> Z Z([Encerrar Sessão])
+flowchart TD
 
----
+    A([Início]) --> B[Tela de Login]
+
+    B --> C{Tipo de Usuário}
+
+    C -->|Administrador| D[Painel Administrativo]
+    C -->|Usuário Comum| E[Painel do Usuário]
+
+    %% Funcionalidades do Administrador
+
+    D --> F[Gerenciar Livros]
+    D --> G[Gerenciar Usuários]
+    D --> H[Realizar Empréstimos]
+    D --> I[Realizar Devoluções]
+    D --> J[Controlar Multas]
+    D --> K[Gerar Relatórios]
+
+    %% Funcionalidades do Usuário
+
+    E --> L[Consultar Livros]
+    E --> M[Pesquisar Livros]
+    E --> N[Visualizar Histórico]
+    E --> O[Consultar Empréstimos]
+    E --> P[Renovar Empréstimos]
+
+    %% Encerramento
+
+    F --> Z([Encerrar Sessão])
+    G --> Z
+    H --> Z
+    I --> Z
+    J --> Z
+    K --> Z
+
+    L --> Z
+    M --> Z
+    N --> Z
+    O --> Z
+    P --> Z
+```
 
 # 🧪 Plano de Testes
 
