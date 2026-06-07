@@ -52,25 +52,25 @@ Os mockups abaixo representam as principais telas do sistema.
 
 ## 🔄 Tela de Empréstimos
 
-![Tela Empréstimos](mockups/2.png)
+![Tela Empréstimos](mockups/6.png)
 
 ---
 
 ## 📊 Tela de Relatórios
 
-![Tela Relatórios](mockups/3.png)
+![Tela Relatórios](mockups/7.png)
 
 ---
 
 ## 👨‍🎓 Tela de Usuários
 
-![Tela Usuários](mockups/4.png)
+![Tela Usuários](mockups/2.png)
 
 ---
 
 ## 🔐 Tela de Login
 
-![Tela Login](mockups/5.png)
+![Tela Login](mockups/login.png)
 
 ---
 
@@ -80,17 +80,6 @@ Os mockups abaixo representam as principais telas do sistema.
 
 ---
 
-## 💰 Tela de Controle de Multas
-
-![Tela Multas](mockups/7.png)
-
----
-
-## 📋 Tela Geral do Sistema
-
-![Tela Sistema](mockups/8.png)
-
----
 
 # 🚀 Funcionalidades Principais
 
@@ -226,45 +215,91 @@ As classes representam entidades reais da biblioteca focando apenas nas caracter
 
 A interface `Serializable` foi utilizada para salvar os dados do sistema em arquivos binários.
 
----
+## 🔄 Fluxograma do Sistema
 
-# 🔄 Fluxograma do Sistema
-
-## 📌 Processo de Empréstimo e Devolução
+## 📌 Fluxo Geral de Utilização
 
 ```mermaid
 flowchart TD
 
-    A([Início]) --> B{Escolha da ação}
+    A([Início]) --> B[Tela de Login]
 
-    B -->|Consultar Livro| C[Pesquisar Livro]
-    C --> D[Exibir Resultados]
+    B --> C{Tipo de Usuário}
 
-    B -->|Realizar Empréstimo| E[Selecionar Livro e Usuário]
-    E --> F{Livro Disponível?}
+    %% ADMINISTRADOR
 
-    F -->|Sim| G[Gerar Empréstimo]
-    G --> H[Definir Prazo de 14 Dias]
-    H --> I[Atualizar Quantidade]
-    I --> J([Empréstimo Finalizado])
+    C -->|Administrador| D[Painel Administrativo]
 
-    F -->|Não| K[Exibir Mensagem de Indisponibilidade]
+    D --> E[Gerenciar Livros]
+    D --> F[Gerenciar Usuários]
+    D --> G[Realizar Empréstimo]
+    D --> H[Realizar Devolução]
+    D --> I[Gerar Relatórios]
 
-    B -->|Realizar Devolução| L[Selecionar Empréstimo]
-    L --> M{Está Atrasado?}
+    %% EMPRÉSTIMO
 
-    M -->|Sim| N[Calcular Multa]
-    N --> O[Registrar Atualização]
+    G --> J{Livro Disponível?}
 
-    M -->|Não| P[Liberar Livro]
+    J -->|Não| K[Empréstimo Negado]
 
-    O --> Q[Atualizar Disponibilidade]
-    P --> Q
+    J -->|Sim| L{Usuário Possui Multa Pendente?}
 
-    Q --> R([Devolução Finalizada])
+    L -->|Sim| M[Empréstimo Bloqueado]
+
+    L -->|Não| N[Registrar Empréstimo]
+    N --> O[Atualizar Quantidade Disponível]
+
+    %% DEVOLUÇÃO
+
+    H --> P{Livro Está Atrasado?}
+
+    P -->|Não| Q[Registrar Devolução]
+
+    P -->|Sim| R[Calcular Multa]
+    R --> S[Pagar Multa]
+    S --> Q
+
+    Q --> O[Atualizar Quantidade Disponível]
+
+    %% USUÁRIO COMUM
+
+    C -->|Usuário Comum| U[Painel do Usuário]
+
+    U --> V[Consultar Livros]
+    U --> W[Pesquisar Livros]
+    U --> X[Consultar Empréstimos]
+    U --> Y[Visualizar Histórico]
+    U --> Z[Renovar Empréstimo]
+
+    %% RENOVAÇÃO
+
+    Z --> AA{Empréstimo Vencido?}
+
+    AA -->|Sim| AB[Renovação Somente com Administrador]
+
+    AA -->|Não| AC{Mais de 2 Exemplares Disponíveis?}
+
+    AC -->|Não| AB
+
+    AC -->|Sim| AD[Renovar Empréstimo]
+
+    %% ENCERRAMENTO
+
+    E --> AE([Encerrar Sessão])
+    F --> AE
+    I --> AE
+    O --> AE
+    T --> AE
+
+    V --> AE
+    W --> AE
+    X --> AE
+    Y --> AE
+    AD --> AE
+    AB --> AE
+    K --> AE
+    M --> AE
 ```
-
----
 
 # 🧪 Plano de Testes
 
