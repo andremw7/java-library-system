@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 
-// Tela gráfica de autenticação limpa com suporte para administradores, bibliotecários e alunos
+// Graphical dialog for user login, allowing students, librarians, and administrators to authenticate themselves in the library system.
 public class LoginDialog extends JDialog {
     private final JTextField userField = new JTextField(15);
     private final JPasswordField passField = new JPasswordField(15);
@@ -9,6 +9,8 @@ public class LoginDialog extends JDialog {
     private boolean authenticated = false;
     private final Library library;
 
+    // Constructor for the LoginDialog, which sets up the user interface components and layout.
+    // It takes a parent frame and a reference to the library system to allow for student authentication based on their RA and password.
     public LoginDialog(Frame parent, Library library) {
         super(parent, "Login do Sistema", true);
         this.library = library;
@@ -17,37 +19,43 @@ public class LoginDialog extends JDialog {
         gbc.insets = new Insets(8, 8, 8, 8);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // ALTERAÇÃO: O JLabel antigo com as dicas de senhas foi totalmente removido para deixar o visual limpo!
+        // Add components to the dialog using GridBagLayout, arranging labels and input fields for username and password, as well as a login button.
         
         gbc.gridwidth = 1;
         gbc.gridx = 0;
-        gbc.gridy = 0; // Reajustado para começar do topo (linha 0)
+        gbc.gridy = 0; // Readjusted to line 0
         add(new JLabel("Usuário:"), gbc);
         gbc.gridx = 1;
         add(userField, gbc);
 
         gbc.gridx = 0;
-        gbc.gridy = 1; // Reajustado para a linha 1
+        gbc.gridy = 1; // Readjusted to line 1
         add(new JLabel("Senha:"), gbc);
         gbc.gridx = 1;
         add(passField, gbc);
 
         JButton loginBtn = new JButton("Login");
         gbc.gridx = 0;
-        gbc.gridy = 2; // Reajustado para a linha 2
+        gbc.gridy = 2; // Readjusted to line 2
         gbc.gridwidth = 2;
         add(loginBtn, gbc);
 
+        // Add an action listener to the login button that triggers the authentication process when clicked.
         loginBtn.addActionListener(e -> authenticate());
 
+        // Set default button for the dialog to allow pressing Enter to trigger the login action.
         pack();
         setResizable(false);
         setLocationRelativeTo(parent);
     }
 
+    // Method to authenticate the user based on the input username and password. 
+    // It checks for hardcoded credentials for admin and librarian roles, 
+    // and then checks the library's student records for a matching RA and password.
     private void authenticate() {
         String user = userField.getText().trim();
         String pass = new String(passField.getPassword());
+
 
         if (user.equals("admin") && pass.equals("123")) {
             userRole = "admin";
@@ -72,10 +80,12 @@ public class LoginDialog extends JDialog {
         }
     }
 
+    // Getter methods to check if the user has been authenticated and to retrieve the user's role after a successful login.
     public boolean isAuthenticated() {
         return authenticated;
     }
 
+    // Retrieve the role of the authenticated user, which can be "admin", "bibliotecario", or "estudante:RA" depending on the type of user that logged in.
     public String getUserRole() {
         return userRole;
     }

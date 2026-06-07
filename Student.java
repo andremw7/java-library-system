@@ -2,18 +2,22 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-// Classe que representa o estudante ou usuario do sistema de biblioteca
+// Class representing a student in the library system,
+//  which includes attributes for the student's name, RA (registration number), contact information, password, and loan history.
 public class Student implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    // Attributes of the Student class, including name, RA, contact information, password for authentication, 
+    // and a list to keep track of the student's loan history.
     private String name;
     private String ra;
     private String contact;
-    // Novo campo privado criado para armazenar com seguranca a senha do estudante
+    // New field added to store the student's password, which will be used for authentication in the login process.
     private String password;
     private List<Loan> loanHistory;
 
-    // Construtor original mantido com senha vazia para evitar a quebra de outras classes
+    // Original constructor for the Student class, which initializes the student's name, RA, and contact information,
+    // and sets the password to an empty string by default. The loan history is initialized as an empty list.
     public Student(String name, String ra, String contact) {
         this.name = name;
         this.ra = ra;
@@ -22,7 +26,8 @@ public class Student implements Serializable {
         this.loanHistory = new ArrayList<>();
     }
 
-    // Novo construtor customizado e preparado para receber a senha criada pelo Admin
+    // New constructor for the Student class that includes a parameter for the password. 
+    // This allows for creating student objects with a specified password, which is essential for the authentication process in the login dialog.
     public Student(String name, String ra, String contact, String password) {
         this.name = name;
         this.ra = ra;
@@ -31,7 +36,8 @@ public class Student implements Serializable {
         this.loanHistory = new ArrayList<>();
     }
 
-    // Metodos de acesso para as propriedades basicas do estudante
+    // Methods for accessing and modifying the attributes of the Student class, 
+    // including getters and setters for name, RA, contact information, and password.
     public String getName() {
         return name;
     }
@@ -56,7 +62,8 @@ public class Student implements Serializable {
         this.contact = contact;
     }
 
-    // Novos metodos getter e setter criados para o controle seguro da senha
+    // New methods for getting and setting the student's password, 
+    // which will be used in the authentication process when the student attempts to log in to the system.
     public String getPassword() {
         return password;
     }
@@ -65,6 +72,7 @@ public class Student implements Serializable {
         this.password = password;
     }
 
+    // Methods for managing the student's loan history, including retrieving the loan history, clearing it, and adding new loans to the history.
     public List<Loan> getLoanHistory() {
         if (loanHistory == null) {
             loanHistory = new ArrayList<>();

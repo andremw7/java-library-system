@@ -1,38 +1,43 @@
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-// Classe com o metodo de entrada inicial que carrega a base de dados e lanca as telas da aplicacao
+// Class responsible for launching the library management application, handling user authentication, 
+// and managing the main session loop of the application.
 public class Main {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             try {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             } catch (Exception ignored) {
-                // Mantem as configuracoes graficas padrao em caso de incompatibilidade com o S.O.
+                // Maintain default look and feel if system look and feel is not available or fails to load.
             }
 
             Library library = DataManager.load();
-            // Inicia o ciclo continuo de sessoes da aplicacao
+            // Initiate the session loop, which will handle user login and allow for logout and re-login without restarting the application.
             runSessionLoop(library);
         });
     }
 
-    // Metodo recursivo que permite fazer logout e reabrir a tela de login infinitamente de forma limpa
+    // Recursive method to manage the session loop of the application. It displays the login dialog, and upon successful authentication, 
+    // it launches the main library UI. If the user logs out, it disposes of the current UI and restarts the session loop, 
+    // allowing for a new login without restarting the application.
     private static void runSessionLoop(Library library) {
         LoginDialog login = new LoginDialog(null, library);
         login.setVisible(true);
 
+        // If the user successfully authenticated, we create the main library UI and controller.
         if (login.isAuthenticated()) {
             LibraryUI view = new LibraryUI(login.getUserRole());
             LibraryController controller = new LibraryController(library, view, login.getUserRole());
             
-            // Define o que acontece quando o usuario clica no botao de Encerrar Sessao
+            // Define the logout action for the controller, 
+            // which will dispose of the current main UI and restart the session loop to allow for a new login.
             controller.setLogoutAction(() -> {
-                view.dispose(); // Fecha e destroi a tela principal atual
-                runSessionLoop(library); // Abre uma nova tela de login utilizando a mesma base de dados
+                view.dispose(); // Close the current main UI when logging out
+                runSessionLoop(library); // Open the login dialog again for a new session
             });
         } else {
-            System.exit(0); // Caso feche a janela de login sem autenticar, encerra o programa
+            System.exit(0); // If the user closes the login dialog or fails to authenticate, we exit the application.
         }
     }
 }

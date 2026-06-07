@@ -2,40 +2,32 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-// Representa um empréstimo de livro dentro do sistema da biblioteca.
-// Controla os envolvidos (livro e estudante), datas de empréstimo, 
-// vencimento e devolução, além de calcular multas por atraso automaticamente.
+// Class representing a loan of a book to a student in the library system.
 public class Loan implements Serializable {
-    // Definindo o ID de serialização para persistência de dados
+    // Defining a serial version UID for serialization compatibility. This ensures that during deserialization,
+    // the class matches the version used during serialization, preventing InvalidClassExceptions if the class structure changes.
     private static final long serialVersionUID = 1L;
     
-    // Constantes do sistema de empréstimo
+    // Constants for loan management, including the standard loan period (14 days) and the fine amount per day of delay (R$ 2,00).
     public static final int LOAN_DAYS = 14; // Prazo padrão de empréstimo (14 dias)
     public static final double FINE_PER_DAY = 2.0; // Valor da multa por dia de atraso (R$ 2,00)
 
-    // Atributos da classe
-    private Book book;               // O livro que foi emprestado
-    private Student student;         // O estudante que pegou o livro
-    private LocalDate loanDate;      // Data em que o empréstimo foi realizado
-    private LocalDate dueDate;       // Data limite para a devolução (vencimento)
-    private LocalDate returnDate;    // Data em que o livro foi efetivamente devolvido (null se ativo)
-    private boolean finePaid = false; // Indica se a multa gerada já foi paga
+    // Atributes of the Loan class, including references to the Book and Student involved in the loan, 
+    // as well as dates for the loan, due date, and return date, and a flag to indicate if any fine has been paid.
+    private Book book;               // book being loaned
+    private Student student;         // student who is borrowing the book
+    private LocalDate loanDate;      // Date when the loan was made
+    private LocalDate dueDate;       // Date when the loan is due for return
+    private LocalDate returnDate;    // Date when the book was returned (null if not yet returned)
+    private boolean finePaid = false; // Flag to indicate if the fine for this loan has been paid (true if paid, false if pending)
 
-    // Construtor padrão para novos empréstimos.
-    // Define automaticamente a data de hoje como data de empréstimo e calcula
-    // a data de vencimento somando os dias padrão (LOAN_DAYS).
-    // @param book O livro a ser emprestado.
-    // @param student O estudante que está pegando o livro.
+    // Constructor for creating a new loan with the current date as the loan date and a due date set to 14 days later.
     public Loan(Book book, Student student) {
         this(book, student, LocalDate.now(), LocalDate.now().plusDays(LOAN_DAYS));
     }
 
-    // Construtor completo para empréstimos.
-    // Permite definir manualmente todas as datas (útil para carregar dados antigos ou testes).
-    // @param book O livro emprestado.
-    // @param student O estudante responsável.
-    // @param loanDate A data de início do empréstimo.
-    // @param dueDate A data de vencimento do empréstimo.
+    // Constructor for creating a new loan with specified loan and due dates. 
+    // This allows for more flexibility in testing and managing loans with custom dates.
     public Loan(Book book, Student student, LocalDate loanDate, LocalDate dueDate) {
         this.book = book;
         this.student = student;
@@ -43,95 +35,85 @@ public class Loan implements Serializable {
         this.dueDate = dueDate;
     }
 
-    // --- Métodos Getters e Setters ---
+    // GETTERS and SETTERS for the attributes of the Loan class
 
-    // Obtém o livro associado a este empréstimo.
-    // @return O objeto Book.
+    // Associates a book with this loan.
+    // @param book The Book object being loaned.
     public Book getBook() {
         return book;
     }
 
-    // Obtém o estudante associado a este empréstimo.
-    // @return O objeto Student.
+    // student associated with this loan.
+    // @param student The Student object who is borrowing the book.
     public Student getStudent() {
         return student;
     }
 
-    // Obtém a data em que o empréstimo foi feito.
-    // @return A data de início.
+    // Date when the loan was made.
+    // @return The date of the loan.
     public LocalDate getLoanDate() {
         return loanDate;
     }
 
-    // Obtém a data de vencimento atual do empréstimo.
-    // @return A data de vencimento.
+    // Due date for returning the book.
+    // @return The date when the loan is due for return.
     public LocalDate getDueDate() {
         return dueDate;
     }
 
-    // Define ou altera a data de vencimento do empréstimo.
-    // Este método resolve o erro que ocorria na classe Library.java ao tentar renovar
-    // ou alterar o prazo de devolução de um livro.
-    // @param dueDate A nova data de vencimento.
+ 
+    // Define a new due date for the loan, allowing for extensions or adjustments to the original due date.
     public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
     }
 
-    // Obtém a data em que o livro foi devolvido.
-    // @return A data de devolução ou null se ainda não foi devolvido.
+    // Date when the book was returned. This will be null if the book has not yet been returned.
     public LocalDate getReturnDate() {
         return returnDate;
     }
 
-    // Verifica se o empréstimo ainda está ativo (ou seja, se o livro ainda não foi devolvido).
-    // @return true se o livro não foi devolvido; false caso contrário.
+    // Verify if the loan is currently active, meaning the book has not yet been returned.
+    // @return true if the loan is active (not yet returned); false if the book
     public boolean isActive() {
         return returnDate == null;
     }
 
-    // Verifica se o empréstimo está atrasado.
-    // O empréstimo está atrasado se estiver ativo e a quantidade de dias de atraso for maior que zero.
-    // @return true se estiver atrasado; false caso contrário.
+    // Check if the loan is overdue, which means it is still active and the current date is past the due date.
+    // @return true if the loan is overdue; false otherwise.
     public boolean isOverdue() {
         return isActive() && getDaysOverdue() > 0;
     }
 
-    // Verifica se a multa deste empréstimo foi paga.
-    // @return true se a multa foi paga; false caso contrário.
+    // Check if the fine for this loan has been paid.
     public boolean isFinePaid() {
         return finePaid;
     }
 
-    // Define o status do pagamento da multa.
-    // @param finePaid true para marcar como paga, false para pendente.
+    // Define the status of the fine for this loan, allowing the system to track whether the fine has been paid or is still pending.
     public void setFinePaid(boolean finePaid) {
         this.finePaid = finePaid;
     }
 
-    // Registra a devolução do livro definindo a data de retorno como a data atual (hoje).
-    // Só executa a ação se o livro ainda não tiver sido devolvido.
+    // Register the return of the book by setting the return date to the current date. 
+    // This method should only be called if the book has not yet been returned (i.e., returnDate is null).
     public void markReturned() {
         if (returnDate == null) {
             returnDate = LocalDate.now();
         }
     }
 
-    // Calcula a quantidade de dias de atraso do empréstimo.
-    // Se o livro já foi devolvido, calcula o atraso com base na data de devolução.
-    // Se ainda não foi devolvido, calcula com base na data atual (hoje).
-    // Retorna 0 caso não haja atraso (vencimento futuro).
-    // @return Quantidade de dias após a data de vencimento.
+    // Calculate the number of days the loan is overdue. If the book has been returned, it compares the return date with the due date.
     public long getDaysOverdue() {
-        // Se já devolveu, compara com a data de retorno. Se não, compara com a data de hoje.
+        // If the book has not been returned, we compare the due date with the current date to calculate how many days it is overdue.
         LocalDate comparisonDate = returnDate == null ? LocalDate.now() : returnDate;
         long days = ChronoUnit.DAYS.between(dueDate, comparisonDate);
-        // Retorna o valor de dias, ou 0 se o cálculo der negativo (em dia)
+        // Return the number of days overdue, ensuring that it does not return a negative value (if the book is returned on time or early, 
+        // it will return 0).
         return Math.max(0, days);
     }
 
-    // Calcula o valor total da multa acumulada por atraso.
-    // Caso a multa já tenha sido paga, o valor retornado será 0.0.
-    // @return O valor em dinheiro da multa (dias de atraso multiplicado pela taxa diária).
+    // Calculate the total fine for this loan based on the number of days overdue and the defined fine per day. 
+    // If the fine has already been paid, it returns 0.0.
     public double calculateFine() {
         if (finePaid) {
             return 0.0;
@@ -139,10 +121,8 @@ public class Loan implements Serializable {
         return getDaysOverdue() * FINE_PER_DAY;
     }
 
-    // Retorna uma representação textual do status atual do empréstimo.
-    // Os estados possíveis incluem: DEVOLVIDO COM MULTA, DEVOLVIDO, 
-    // ATRASADO (MULTA RESETADA), ATRASADO ou EM DIA.
-    // @return String contendo a descrição amigável do status.
+    // Return a string representing the current status of the loan, 
+    // which can be "EM DIA" (on time), "ATRASADO" (overdue), "DEVOLVIDO" (returned), or "DEVOLVIDO COM MULTA" (returned with fine).
     public String getStatus() {
         if (!isActive()) {
             return calculateFine() > 0 ? "DEVOLVIDO COM MULTA" : "DEVOLVIDO";
@@ -153,8 +133,7 @@ public class Loan implements Serializable {
         return "EM DIA";
     }
 
-    // Representação em String do empréstimo para exibição em listas ou logs.
-    // Exibe o título do livro, o nome do estudante e a data de vencimento.
+    // Return a string representation of the loan, showing the title of the book, the name of the student, and the due date.
     @Override
     public String toString() {
         return book.getTitle() + " -> " + student.getName() + " (vence em " + dueDate + ")";
