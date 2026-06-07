@@ -1,19 +1,18 @@
 import java.io.Serializable;
 
-/**
- * Representa um livro no sistema da biblioteca.
- * Estende LibraryItem para herdar o comportamento base de itens do acervo.
- */
+// Class representing a book in the library system, 
+// which extends the abstract class LibraryItem and implements Serializable for object serialization.
 public class Book extends LibraryItem implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    // Attributes specific to the Book class, including the author, ISBN, genre, publication year, and the number of available copies.
     private String author;
     private String isbn;
     private String genre;
     private int year;
     private int availableCopies;
 
-    // Construtor completo utilizado na classe de testes e no controlador
+    // Constructor for the Book class, which initializes all the attributes of the book, including the title inherited from LibraryItem.
     public Book(String title, String author, String isbn, String genre, int year, int availableCopies) {
         super(title); // Passa o título para a classe mãe (LibraryItem)
         this.author = author;
@@ -23,7 +22,7 @@ public class Book extends LibraryItem implements Serializable {
         this.availableCopies = availableCopies;
     }
 
-    // Getters e Setters
+    // Getters e Setters for the attributes of the Book class, allowing other classes to access and modify the details of the book as needed.
     public String getAuthor() { return author; }
     public void setAuthor(String author) { this.author = author; }
 
@@ -39,7 +38,7 @@ public class Book extends LibraryItem implements Serializable {
     public int getAvailableCopies() { return availableCopies; }
     public void setAvailableCopies(int availableCopies) { this.availableCopies = availableCopies; }
 
-    // Implementação dos métodos abstratos de LibraryItem
+    // Implementation of the abstract methods from LibraryItem, providing specific logic for checking availability and getting details for a book.
     @Override
     public boolean isAvailable() {
         return availableCopies > 0;
