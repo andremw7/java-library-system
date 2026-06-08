@@ -29,8 +29,8 @@ O sistema permite o gerenciamento de:
 | Nome | NUSP |
 |---|---|
 | André Marcelino Watanabe | 14558311 |
-| PREENCHER | PREENCHER |
-| PREENCHER | PREENCHER |
+| Pedro Henrique Tambara Zanutto | 15656517 |
+| Isaac Ferreira | 15637912 |
 
 ---
 
