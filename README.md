@@ -323,7 +323,6 @@ flowchart TD
 
 ---
 
-```
 
 O sistema deve:
 
