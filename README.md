@@ -323,8 +323,7 @@ flowchart TD
 
 ---
 
-
-O sistema deve:
+## O sistema deve:
 
 - Cadastrar corretamente
 - Buscar corretamente
