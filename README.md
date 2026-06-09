@@ -323,31 +323,6 @@ flowchart TD
 
 ---
 
-## 🤖 Testes Automáticos
-
-Executar:
-
-```bash
-java TestLibrary
-```
-
-O teste valida:
-
-- Empréstimos
-- Devoluções
-- Histórico
-- Multas
-- Prazo automático
-- Persistência dos dados
-
----
-
-# ✅ Resultados dos Testes
-
-Resultado esperado:
-
-```text
-Todos os testes passaram.
 ```
 
 O sistema deve:
