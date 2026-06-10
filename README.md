@@ -350,14 +350,17 @@ flowchart TD
 5. Cadastrar usuário
 6. Editar usuário
 7. Buscar usuário
-8. Realizar empréstimo
-9. Renovar empréstimo
-10. Verificar redução das cópias disponíveis
-11. Realizar devolução
-12. Verificar aumento das cópias disponíveis
-13. Testar relatórios
-14. Testar permissões de usuário
-15. Reiniciar sistema e validar persistência
+8. Entrar como bibliotecario
+9. Realizar empréstimo
+10. Renovar empréstimo
+11. Verificar redução das cópias disponíveis
+12. Realizar devolução
+13. Verificar aumento das cópias disponíveis
+14. Testar relatórios
+15. Entrar como usuário comum
+16. Testar permissões de usuário
+17. Testar renovação de empréstimo como usuário comum
+18. Reiniciar sistema e validar persistência
 
 ---
 
