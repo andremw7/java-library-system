@@ -29,8 +29,8 @@ O sistema permite o gerenciamento de:
 | Nome | NUSP |
 |---|---|
 | André Marcelino Watanabe | 14558311 |
-| PREENCHER | PREENCHER |
-| PREENCHER | PREENCHER |
+| Pedro Henrique Tambara Zanutto | 15656517 |
+| Isaac Ferreira | 15637912 |
 
 ---
 
@@ -323,34 +323,7 @@ flowchart TD
 
 ---
 
-## 🤖 Testes Automáticos
-
-Executar:
-
-```bash
-java TestLibrary
-```
-
-O teste valida:
-
-- Empréstimos
-- Devoluções
-- Histórico
-- Multas
-- Prazo automático
-- Persistência dos dados
-
----
-
-# ✅ Resultados dos Testes
-
-Resultado esperado:
-
-```text
-Todos os testes passaram.
-```
-
-O sistema deve:
+## O sistema deve:
 
 - Cadastrar corretamente
 - Buscar corretamente
