@@ -163,9 +163,9 @@ O sistema possui dois tipos de usuários:
 
 | Perfil | Permissões |
 |---|---|
-| Administrador | Controle total do sistema |
+| Administrador | Adiciona e edita livros e estudantes, resesta multas|
+| Bibliotecario | Realiza empréstimos e devoluções|
 | Usuário comum | Consulta e renovação de empréstimos |
-
 ---
 
 ## 💾 Persistência de Dados
@@ -261,7 +261,6 @@ A arquitetura adotada busca manter baixo acoplamento entre os componentes e alta
 flowchart TD
 
     A([Início]) --> B[Tela de Login]
-
     B --> C{Tipo de Usuário}
 
     %% ADMINISTRADOR
@@ -297,7 +296,7 @@ flowchart TD
     R --> S[Pagar Multa]
     S --> Q
 
-    Q --> O[Atualizar Quantidade Disponível]
+    Q --> O
 
     %% USUÁRIO COMUM
 
@@ -327,7 +326,6 @@ flowchart TD
     F --> AE
     I --> AE
     O --> AE
-    T --> AE
 
     V --> AE
     W --> AE
