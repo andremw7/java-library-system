@@ -249,8 +249,6 @@ As entidades `Book`, `Student`, `Loan` e `User` representam os principais objeto
 
 A autenticação dos usuários é realizada através da classe `LoginDialog`, permitindo diferenciar administradores e usuários comuns, cada um com permissões específicas dentro do sistema.
 
-A existência de uma classe de testes (`TestLibrary`) permitiu validar diversas funcionalidades durante o desenvolvimento, contribuindo para maior confiabilidade do software.
-
 A arquitetura adotada busca manter baixo acoplamento entre os componentes e alta coesão dentro de cada classe, seguindo boas práticas de Programação Orientada a Objetos.
 
 ---
