@@ -24,6 +24,22 @@ O sistema permite o gerenciamento de:
 
 ---
 
+# 📋 Requirements
+
+O sistema foi desenvolvido para atender aos seguintes requisitos gerais:
+
+- Gerenciar o acervo de livros da biblioteca;
+- Gerenciar o cadastro de usuários;
+- Controlar empréstimos, renovações e devoluções;
+- Calcular multas por atraso;
+- Gerar relatórios administrativos;
+- Controlar permissões entre administradores e usuários comuns;
+- Persistir os dados entre diferentes execuções do sistema.
+
+As funcionalidades específicas que implementam esses requisitos estão descritas na seção **🚀 Funcionalidades Principais**.
+
+---
+
 # 👨‍💻 Integrantes
 
 | Nome | NUSP |
