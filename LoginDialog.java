@@ -61,7 +61,7 @@ public class LoginDialog extends JDialog {
             userRole = "admin";
             authenticated = true;
             dispose();
-        } else if (user.equals("user") && pass.equals("123")) {
+        } else if (user.equals("bibliotecario") && pass.equals("123")) {
             userRole = "bibliotecario";
             authenticated = true;
             dispose();

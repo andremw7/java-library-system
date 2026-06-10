@@ -21,11 +21,14 @@ public abstract class LibraryItem implements Serializable {
         return title;
     }
 
+    // Setter for the title, allowing the title of the library item to be updated after creation if necessary.
     public void setTitle(String title) {
         this.title = title;
     }
 
+    // Abstract method to check if the library item is available for borrowing. This must be implemented by all subclasses, as the availability logic may differ based on the type of item (e.g., a book might be available if it's not currently checked out, while a DVD might have different criteria).
     public abstract boolean isAvailable();
 
+    // Abstract method to get the details of the library item. This must be implemented by all subclasses to provide specific information about the item, such as author for books or director for DVDs, along with any other relevant details.
     public abstract String getDetails();
 }

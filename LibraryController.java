@@ -34,7 +34,8 @@ public class LibraryController {
         PATRON_HISTORY
     }
 
-    // Constructor: Connects the components, sets permissions, and loads initial data
+    // Constructor: Connects the components, sets permissions, and loads initial data into the interface tables. 
+    // It also makes the main view visible to the user.
     public LibraryController(Library library, LibraryUI view, String userRole) {
         this.library = library;
         this.view = view;
@@ -45,12 +46,14 @@ public class LibraryController {
         this.view.setVisible(true);
     }
 
-
+    // Setter for the logout action, allowing the controller to trigger a logout process defined externally, 
+    // such as returning to the login screen or closing the application.
     public void setLogoutAction(Runnable logoutAction) {
         this.logoutAction = logoutAction;
     }
 
-    // Access Control Method: Shows or hides UI elements based on the user logged in
+    // Access Control Method: Shows or hides UI elements based on the user logged in (Administrator, Librarian, or Student), 
+    // ensuring that users can only access features and data relevant to their role.
     private void applyPermissions() {
         boolean isAdmin = "admin".equalsIgnoreCase(userRole);
         boolean isBibliotecario = "bibliotecario".equalsIgnoreCase(userRole);
@@ -62,12 +65,15 @@ public class LibraryController {
         view.getStudentForm().setVisible(isAdmin);
         view.setAdminControlsEnabled(isAdmin);
 
-        // UI adjustments if the logged-in user is a Student
+        // UI adjustments if the logged-in user is a Student - 
+        // significantly restricts access to features and data, allowing only viewing of books and their own loan history, 
+        // and the ability to request loan renewals
         if (isEstudante) {
             String ra = userRole.substring("estudante:".length());
             reportPatronId = ra;
             reportMode = ReportMode.PATRON_HISTORY;
 
+            // Hide loan registration fields and buttons for students, as they cannot perform these actions themselves
             view.getNewLoanFieldsPanel().setVisible(false);
 
             // Remove the Users tab for standard student views
@@ -127,7 +133,7 @@ public class LibraryController {
                     "Controle de Acesso", JOptionPane.INFORMATION_MESSAGE);
         } else if (isAdmin) {
 
-            // UI adjustments if the logged-in user is an Admin
+            // UI adjustments if the logged-in user is an Admin - full access to all features and data
             view.getCheckoutBtn().setEnabled(true);
             view.getReturnBtn().setEnabled(true);
             view.getRenewBtn().setEnabled(true);
@@ -151,6 +157,7 @@ public class LibraryController {
         view.getClearBookBtn().addActionListener(e -> clearBookFields());
         setupSearchFilter(view.getBookSearchField(), view.getBookSorter());
 
+       
         // Event listener to auto-fill input fields when a book is selected in the table, but only if the user has admin permissions to edit books
         view.getBookTable().getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
@@ -202,15 +209,18 @@ public class LibraryController {
         view.getRenewBtn().addActionListener(e -> runSafely(this::renewBook));
         setupSearchFilter(view.getLoanSearchField(), view.getLoanSorter());
 
-        // Updates dropdown selection lists while typing filters in the loan registration tab, ensuring that the options are always relevant to the search query and available inventory
+        // Updates dropdown selection lists while typing filters in the loan registration tab, 
+        // ensuring that the options are always relevant to the search query and available inventory
         setupDynamicComboFilter(view.getBookFilterField(), this::refreshLoanCombos);
         setupDynamicComboFilter(view.getStudentFilterField(), this::refreshLoanCombos);
 
         // Report Filtering Actions
-        // Setup search filters for the reporting module, allowing dynamic filtering of the report table based on user input, and ensuring that the search is case-insensitive and treats special characters as literals
+        // Setup search filters for the reporting module, allowing dynamic filtering of the report table based on user input, 
+        // and ensuring that the search is case-insensitive and treats special characters as literals
         setupSearchFilter(view.getReportSearchField(), view.getReportSorter());
         
-        // Report display mode selection buttons, allowing users to switch between different views of the loan history and active loans, with specific handling for student users to automatically filter their own loan history
+        // Report display mode selection buttons, allowing users to switch between different views of the loan history and active loans, 
+        // with specific handling for student users to automatically filter their own loan history
         view.getShowActiveLoansBtn().addActionListener(e -> { reportMode = ReportMode.ACTIVE; refreshReports(); });
         view.getShowOverdueLoansBtn().addActionListener(e -> { reportMode = ReportMode.OVERDUE; refreshReports(); });
         view.getShowAllHistoryBtn().addActionListener(e -> { reportMode = ReportMode.ALL_HISTORY; refreshReports(); });
@@ -227,7 +237,8 @@ public class LibraryController {
         view.getResetFineBtn().addActionListener(e -> runSafely(this::resetFine));
     }
 
-    // Handles extending a book return deadline by 14 days, but only if the book has at least 2 copies available in the library to ensure that other users can still borrow it. This function is accessible to both Admin and Librarian roles, but not to Students.
+    // Handles extending a book return deadline by 14 days, but only if the book has at least 2 copies available in the library 
+    // to ensure that other users can still borrow it. This function is accessible to both Admin and Librarian roles, but not to Students.
     private void renewBook() {
         int row = view.getLoanTable().getSelectedRow();
         requireSelected(row != -1 ? row : null, "Selecione um empréstimo ativo na tabela para renovar.");
@@ -235,6 +246,12 @@ public class LibraryController {
         int modelRow = view.getLoanTable().convertRowIndexToModel(row);
         Loan selected = currentActiveLoans.get(modelRow);
         requireSelected(selected, "Empréstimo inválido selecionado.");
+
+        // Rule: Cannot renew if the loan is already overdue, 
+        // as this would allow users to bypass overdue penalties and extend the loan indefinitely without returning the book.
+        if (selected.isOverdue()) {
+            throw new IllegalArgumentException("Não é possível renovar um empréstimo que já está atrasado. Por favor, realize a devolução e registre um novo empréstimo se desejar continuar lendo este livro.");
+        }
         
         // Rule: Can only renew if the library has extra copies left
         if (selected.getBook().getAvailableCopies() < 2) {
@@ -247,7 +264,9 @@ public class LibraryController {
         showInfo("Empréstimo renovado com sucesso por mais 14 dias!");
     }
 
-    // Main update method to synchronize all interface tables with database changes, ensuring that any addition, modification, or deletion of books, students, or loans is immediately reflected in the user interface. This method is called after every operation that changes the library's data to maintain consistency and provide real-time feedback to the user.
+    // Main update method to synchronize all interface tables with database changes, ensuring that any addition, modification, 
+    // or deletion of books, students, or loans is immediately reflected in the user interface. 
+    // This method is called after every operation that changes the library's data to maintain consistency and provide real-time feedback to the user.
     private void refreshAll() {
         refreshBookTable();
         refreshStudentTable();
