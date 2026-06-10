@@ -231,6 +231,30 @@ As classes representam entidades reais da biblioteca focando apenas nas caracter
 
 A interface `Serializable` foi utilizada para salvar os dados do sistema em arquivos binários.
 
+---
+
+# 💬 Comentários sobre o código
+
+O projeto foi organizado seguindo o princípio da separação de responsabilidades, facilitando manutenção, reutilização e futuras expansões.
+
+A interface gráfica foi concentrada na classe `LibraryUI`, responsável por apresentar as telas e capturar as ações do usuário.
+
+A classe `LibraryController` atua como intermediária entre a interface e a lógica de negócio, desacoplando a camada visual das regras do sistema.
+
+As regras principais de gerenciamento da biblioteca foram implementadas na classe `Library`, responsável pelo controle dos livros, usuários, empréstimos e validações necessárias para cada operação.
+
+A persistência dos dados é realizada pela classe `DataManager`, utilizando serialização Java para armazenar o estado completo da biblioteca em arquivo binário.
+
+As entidades `Book`, `Student`, `Loan` e `User` representam os principais objetos do domínio da aplicação, enquanto `LibraryItem` fornece uma abstração comum para reutilização de atributos e comportamentos.
+
+A autenticação dos usuários é realizada através da classe `LoginDialog`, permitindo diferenciar administradores e usuários comuns, cada um com permissões específicas dentro do sistema.
+
+A existência de uma classe de testes (`TestLibrary`) permitiu validar diversas funcionalidades durante o desenvolvimento, contribuindo para maior confiabilidade do software.
+
+A arquitetura adotada busca manter baixo acoplamento entre os componentes e alta coesão dentro de cada classe, seguindo boas práticas de Programação Orientada a Objetos.
+
+---
+
 ## 🔄 Fluxograma do Sistema
 
 ## 📌 Fluxo Geral de Utilização
@@ -362,7 +386,36 @@ Durante o desenvolvimento surgiram alguns desafios importantes:
 - Controle de permissões entre administrador e usuário comum
 - Melhorias na experiência do usuário em buscas e troca de sessão
 
-Todos os problemas foram corrigidos na versão final do sistema.
+---
+
+# ✅ Test Results
+
+Após a execução do plano de testes, verificou-se que todas as funcionalidades principais apresentaram comportamento esperado.
+
+Os resultados obtidos foram:
+
+| Funcionalidade | Resultado |
+|---------------|-----------|
+| Cadastro de livros | ✅ Sucesso |
+| Edição de livros | ✅ Sucesso |
+| Exclusão de livros | ✅ Sucesso |
+| Busca de livros | ✅ Sucesso |
+| Cadastro de usuários | ✅ Sucesso |
+| Edição de usuários | ✅ Sucesso |
+| Exclusão de usuários | ✅ Sucesso |
+| Busca de usuários | ✅ Sucesso |
+| Empréstimos | ✅ Sucesso |
+| Renovação | ✅ Sucesso |
+| Devolução | ✅ Sucesso |
+| Atualização de exemplares | ✅ Sucesso |
+| Controle de multas | ✅ Sucesso |
+| Relatórios | ✅ Sucesso |
+| Persistência após reinicialização | ✅ Sucesso |
+| Controle de permissões | ✅ Sucesso |
+
+Durante os testes foram identificados pequenos problemas relacionados ao comportamento de alguns botões da interface, sincronização dos dados persistidos e organização visual dos componentes. Após as correções realizadas durante o desenvolvimento, o sistema apresentou funcionamento estável e consistente.
+
+Também foi verificado que os dados permanecem armazenados corretamente após o encerramento e reinicialização da aplicação, confirmando o funcionamento adequado da serialização utilizada.
 
 ---
 
@@ -370,34 +423,57 @@ Todos os problemas foram corrigidos na versão final do sistema.
 
 ## ✅ Pré-requisitos
 
-- Java JDK 17 ou superior
+Antes de executar o projeto é necessário possuir:
 
----
+- Java Development Kit (JDK) 17 ou superior instalado;
+- Variável de ambiente `JAVA_HOME` configurada corretamente (opcional, mas recomendada);
+- Terminal ou prompt de comando.
+
+## 📥 Obtenção do Projeto
+
+Clone o repositório utilizando:
+
+```bash
+git clone <URL_DO_REPOSITORIO>
+```
+
+Ou faça o download do projeto em formato ZIP e extraia os arquivos.
+
+## 📂 Acesse a pasta do projeto
+
+```bash
+cd JavaLibrary
+```
 
 ## ▶️ Compilação
+
+Compile todos os arquivos Java:
 
 ```bash
 javac *.java
 ```
 
----
-
 ## ▶️ Execução
+
+Execute a aplicação utilizando:
 
 ```bash
 java Main
 ```
 
----
+## 🔐 Login
 
-# 🔐 Credenciais
+Após iniciar o programa, será exibida a tela de autenticação.
+
+Utilize uma das credenciais disponíveis:
 
 | Perfil | Login | Senha |
-|---|---|---|
+|---------|--------|--------|
 | Administrador | `admin` | `123` |
-| Usuário | `2222` | `2222` |
+| Bibliotecário | `bibliotecario` | `123` |
+| Usuário comum | `2222` | `2222` |
 
----
+Todos os dados gerados durante a utilização serão armazenados automaticamente no arquivo `biblioteca_dados.dat`, permanecendo disponíveis nas próximas execuções do sistema.---
 
 # 📂 Estrutura de Pastas Recomendada
 
@@ -432,12 +508,6 @@ java Main
 Possíveis melhorias futuras:
 
 - Interface mais moderna e amigável
-- Sistema de reservas online
-- Integração com banco de dados relacional
-- Criptografia de senhas
-- Exportação de relatórios em PDF
-- Dashboard com gráficos estatísticos
-- Notificações automáticas de atraso
 
 ---
 
@@ -446,3 +516,10 @@ Possíveis melhorias futuras:
 Projeto desenvolvido para fins acadêmicos na disciplina de Programação Orientada a Objetos.
 
 ---
+# 📝 Comentários gerais
+
+O desenvolvimento deste projeto permitiu aplicar de forma prática diversos conceitos estudados na disciplina de Programação Orientada a Objetos, incluindo encapsulamento, herança, abstração, polimorfismo e organização modular do código.
+
+Além do aprendizado técnico, o trabalho proporcionou experiência no desenvolvimento colaborativo, na separação de responsabilidades entre componentes, na criação de interfaces gráficas utilizando Java Swing e na implementação de mecanismos de persistência de dados.
+
+A estrutura adotada torna o sistema facilmente expansível, permitindo futuras integrações com bancos de dados, serviços externos e novas funcionalidades sem necessidade de grandes alterações na arquitetura existente.
