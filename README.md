@@ -24,7 +24,7 @@ O sistema permite o gerenciamento de:
 
 ---
 
-# 📋 Requirements
+# 📋 Requisitos
 
 O sistema foi desenvolvido para atender aos seguintes requisitos gerais:
 
