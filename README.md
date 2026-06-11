@@ -103,7 +103,7 @@ Os mockups abaixo representam as principais telas do sistema.
 
 ## 🔐 Tela de Login
 
-![Tela Login](imagens/login.png)
+![Tela Login](mockups/login.png)
 
 ---
 ---
