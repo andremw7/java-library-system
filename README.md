@@ -73,7 +73,7 @@ Os mockups abaixo representam as principais telas do sistema.
 
 ## 🔄 Tela de Empréstimos (Estudante)
 
-![Tela Empréstimos Estudantes](mockups/emprestimo-estudantes.png)
+![Tela Empréstimos Estudantes](mockups/emprestimo estudantes.png)
 
 ---
 
