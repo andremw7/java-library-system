@@ -61,7 +61,7 @@ Os mockups abaixo representam as principais telas do sistema.
 
 ## 📚 Tela de Gerenciamento de Livros (Admin)
 
-![Tela Livros Admin](mockups/livros-admin.png)
+![Tela Livros Admin](mockups/Livros%20ADMIN.png)
 
 ---
 
@@ -73,19 +73,19 @@ Os mockups abaixo representam as principais telas do sistema.
 
 ## 🔄 Tela de Empréstimos (Estudante)
 
-![Tela Empréstimos Estudantes](mockups/emprestimo estudantes.png)
+![Tela Empréstimos Estudantes](mockups/emprestimo%20estudante.png)
 
 ---
 
 ## 📊 Tela de Relatórios (Admin)
 
-![Tela Relatórios Admin](mockups/relatorio-admin.png)
+![Tela Relatórios Admin](mockups/relatorio-Admin.png)
 
 ---
 
 ## 📊 Tela de Relatórios (Bibliotecário)
 
-![Tela Relatórios Bibliotecário](mockups/relatorio-bibliotecario.png)
+![Tela Relatórios Bibliotecário](mockups/Relatorio-bibliotecario.png)
 
 ---
 
@@ -97,7 +97,7 @@ Os mockups abaixo representam as principais telas do sistema.
 
 ## 👨‍🎓 Tela de Usuários (Admin)
 
-![Tela Usuários Admin](mockups/usuario-admin.png)
+![Tela Usuários Admin](mockups/Usuarios-admin.png)
 
 ---
 
@@ -105,6 +105,7 @@ Os mockups abaixo representam as principais telas do sistema.
 
 ![Tela Login](imagens/login.png)
 
+---
 ---
 
 
