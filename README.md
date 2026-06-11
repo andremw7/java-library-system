@@ -57,42 +57,53 @@ A interface do sistema foi desenvolvida utilizando **Java Swing**, organizada em
 Os mockups abaixo representam as principais telas do sistema.
 
 ---
-
 # 📷 Mockups das Interfaces do Sistema
 
-## 📚 Tela de Gerenciamento de Livros
+## 📚 Tela de Gerenciamento de Livros (Admin)
 
-![Tela Livros](mockups/1.png)
-
----
-
-## 🔄 Tela de Empréstimos
-
-![Tela Empréstimos](mockups/6.png)
+![Tela Livros Admin](mockups/livros-admin.png)
 
 ---
 
-## 📊 Tela de Relatórios
+## 🔄 Tela de Empréstimos (Bibliotecário)
 
-![Tela Relatórios](mockups/7.png)
+![Tela Empréstimos Bibliotecário](mockups/emprestimo-bibliotecario.png)
 
 ---
 
-## 👨‍🎓 Tela de Usuários
+## 🔄 Tela de Empréstimos (Estudante)
 
-![Tela Usuários](mockups/2.png)
+![Tela Empréstimos Estudantes](mockups/emprestimo-estudantes.png)
+
+---
+
+## 📊 Tela de Relatórios (Admin)
+
+![Tela Relatórios Admin](mockups/relatorio-admin.png)
+
+---
+
+## 📊 Tela de Relatórios (Bibliotecário)
+
+![Tela Relatórios Bibliotecário](mockups/relatorio-bibliotecario.png)
+
+---
+
+## 📊 Tela de Relatórios (Estudante)
+
+![Tela Relatórios Estudante](mockups/relatorio-estudante.png)
+
+---
+
+## 👨‍🎓 Tela de Usuários (Admin)
+
+![Tela Usuários Admin](mockups/usuario-admin.png)
 
 ---
 
 ## 🔐 Tela de Login
 
-![Tela Login](mockups/login.png)
-
----
-
-## 📖 Tela de Histórico de Empréstimos
-
-![Tela Histórico](mockups/6.png)
+![Tela Login](imagens/login.png)
 
 ---
 
