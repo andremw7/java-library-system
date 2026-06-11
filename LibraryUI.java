@@ -1,3 +1,4 @@
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
@@ -10,6 +11,7 @@ import java.awt.*;
  * * @author André Watanabe
  * @author Pedro Zanutto
  * @author Isaac Ferreira
+ * @version 1.0
  */
 public class LibraryUI extends JFrame {
    
@@ -18,10 +20,15 @@ public class LibraryUI extends JFrame {
      * This is used to control access to certain features and functionalities within the UI, ensuring that only authorized users can perform specific actions like adding or editing books and users.
      */
     private final String userRole;
+    
+    /**
+     * The main tabbed pane that holds different sections of the application (Books, Users, Loans, Reports).
+     */
     private final JTabbedPane tabbedPane = new JTabbedPane();
 
     /**
      * Panels for the different sections of the UI: one for managing books and another for managing users.
+     * GridBagLayout is used to provide a flexible, grid-based alignment for the forms.
      */
     private final JPanel bookForm = new JPanel(new GridBagLayout());
     private final JPanel studentForm = new JPanel(new GridBagLayout());
@@ -38,11 +45,13 @@ public class LibraryUI extends JFrame {
     private final JTextField yearField = new JTextField(5);
     private final JTextField qtyField = new JTextField(5);
 
+    // Buttons for performing Create, Read, Update, and Delete (CRUD) operations on the book inventory.
     private final JButton addBookBtn = new JButton("Adicionar");
     private final JButton editBookBtn = new JButton("Editar");
     private final JButton deleteBookBtn = new JButton("Excluir");
     private final JButton clearBookBtn = new JButton("Limpar campos");
 
+    // Table model and components to visualize and sort the cataloged books.
     private final DefaultTableModel bookModel = createModel(new String[]{"Título", "Autor", "ISBN", "Gênero", "Ano", "Cópias"});
     private final JTable bookTable = new JTable(bookModel);
     private final TableRowSorter<DefaultTableModel> bookSorter = new TableRowSorter<>(bookModel);
@@ -57,11 +66,13 @@ public class LibraryUI extends JFrame {
     private final JTextField contactField = new JTextField(14);
     private final JPasswordField passwordField = new JPasswordField(14);
 
+    // Buttons for managing student/patron records within the system.
     private final JButton addStudentBtn = new JButton("Adicionar");
     private final JButton editStudentBtn = new JButton("Editar");
     private final JButton deleteStudentBtn = new JButton("Excluir");
     private final JButton clearStudentBtn = new JButton("Limpar campos");
 
+    // Table model and components to visualize and sort registered students/users.
     private final DefaultTableModel studentModel = createModel(new String[]{"Nome", "ID/RA", "Contato", "Senha"});
     private final JTable studentTable = new JTable(studentModel);
     private final TableRowSorter<DefaultTableModel> studentSorter = new TableRowSorter<>(studentModel);
@@ -74,8 +85,8 @@ public class LibraryUI extends JFrame {
     private final JTextField loanSearchField = new JTextField(22);
     
     /**
-     * Aditional text fields for filtering the book and student combo boxes in the loan management section. 
-     * while the loanSearchField is for filtering the loans table, 
+     * Additional text fields for filtering the book and student combo boxes in the loan management section. 
+     * While the loanSearchField is for filtering the loans table, 
      * these fields allow users to quickly find and select the desired book and student when creating a new loan, 
      * enhancing the user experience by providing dynamic search capabilities within the loan creation process.
      */
@@ -87,6 +98,8 @@ public class LibraryUI extends JFrame {
      */
     private final JComboBox<Book> loanBookCombo = new JComboBox<>();
     private final JComboBox<Student> loanStudentCombo = new JComboBox<>();
+    
+    // Sub-panel specifically designed to hold the input fields for registering a new loan transaction.
     private final JPanel newLoanFieldsPanel = new JPanel(new GridBagLayout()); 
 
     /**
@@ -104,14 +117,16 @@ public class LibraryUI extends JFrame {
     private final TableRowSorter<DefaultTableModel> loanSorter = new TableRowSorter<>(loanModel);
 
     /**
-     * Report management components, including text fields for searching and filtering reports
+     * Report management components, including text fields for searching and filtering reports.
      */
     private final JTextField reportSearchField = new JTextField(22);
     private final JTextField reportPatronField = new JTextField(10);
+    
+    // FlowLayout panel to align the patron-specific report search components to the left side.
     private final JPanel reportPatronPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0)); 
 
     /**
-     * Buttons for filtering reports based on different criteria
+     * Buttons for filtering reports based on different operational criteria.
      */
     private final JButton showActiveLoansBtn = new JButton("Ativos");
     private final JButton showOverdueLoansBtn = new JButton("Atrasados");
@@ -127,7 +142,7 @@ public class LibraryUI extends JFrame {
     private final TableRowSorter<DefaultTableModel> reportSorter = new TableRowSorter<>(reportModel);
 
     /**
-     * Button for logging out of the system
+     * Button for logging out of the system.
      */
     private final JButton logoutBtn = new JButton("Encerrar Sessão");
 
@@ -139,40 +154,59 @@ public class LibraryUI extends JFrame {
      */
     public LibraryUI(String userRole) {
         this.userRole = userRole;
+        
+        // Sets the title of the window, dynamically appending the role of the current user.
         setTitle("Sistema de Gestão de Biblioteca - Perfil: " + userRole.toUpperCase());
+        
+        // Defines the initial dimensions of the application window (width, height).
         setSize(1000, 650);
+        
+        // Ensures the application terminates entirely when the main window is closed.
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        // Centers the window on the screen upon startup.
         setLocationRelativeTo(null);
 
         // Main panel that holds all the components of the UI, using a BorderLayout to organize the top bar and the tabbed pane.
         JPanel mainPanel = new JPanel(new BorderLayout());
+        
+        // Adds an invisible padding around the main panel to prevent inner components from touching the window edges.
         mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        //verifying the user's role to determine which tabs and functionalities should be accessible in the UI.
+        // Verifying the user's role to determine which tabs and functionalities should be accessible in the UI.
         boolean isAdmin = "admin".equalsIgnoreCase(userRole);
 
-        setupBooksTab();   // Everyone has access to the Books tab (the Librarian can manage books, while the Admin can only view them)
+        // Everyone has access to the Books tab (the Librarian can manage books, while the Admin can only view them).
+        setupBooksTab();   
         
         // Only users with the "admin" role have access to the "Users" tab, 
         // which allows them to manage user accounts.
-            if (isAdmin) {
+        if (isAdmin) {
             setupStudentsTab();
-            }
+        }
         
-        setupLoansTab();   // Everyone has access to the Loans tab (the Librarian can manage loans, while the Admin can only view them)
-        setupReportsTab(); // Everyone has access to the Reports tab (the Librarian can view reports, while the Admin can filter and reset fines)
+        // Everyone has access to the Loans tab (the Librarian can manage loans, while the Admin can only view them).
+        setupLoansTab();   
+        
+        // Everyone has access to the Reports tab (the Librarian can view reports, while the Admin can filter and reset fines).
+        setupReportsTab(); 
 
         // Top bar that displays a welcome message with the user's role and a logout button, 
         // using a BorderLayout to position the welcome message on the left and the logout button on the right.
         JPanel topBar = new JPanel(new BorderLayout());
         JLabel welcomeLabel = new JLabel("Conectado como: " + userRole);
         welcomeLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        
+        // Appends the welcome label to the left side (WEST) and the logout button to the right side (EAST).
         topBar.add(welcomeLabel, BorderLayout.WEST);
         topBar.add(logoutBtn, BorderLayout.EAST);
         topBar.setBorder(new EmptyBorder(0, 0, 10, 0));
 
+        // Combines the constructed top bar and the tabbed navigation pane into the application's main panel.
         mainPanel.add(topBar, BorderLayout.NORTH);
         mainPanel.add(tabbedPane, BorderLayout.CENTER);
+        
+        // Finally, adds the assembled main panel to the JFrame window.
         add(mainPanel);
     }
 
@@ -245,7 +279,7 @@ public class LibraryUI extends JFrame {
         gbc.gridx = 0; gbc.gridy = 5; bookForm.add(new JLabel("Cópias:"), gbc);
         gbc.gridx = 1; bookForm.add(qtyField, gbc);
 
-        //JPanel to hold the action buttons for managing books, using a GridLayout to arrange the buttons in a 2x2 grid with spacing between them.
+        // JPanel to hold the action buttons for managing books, using a GridLayout to arrange the buttons in a 2x2 grid with spacing between them.
         JPanel btnPanel = new JPanel(new GridLayout(2, 2, 5, 5));
         btnPanel.add(addBookBtn); btnPanel.add(editBookBtn);
         btnPanel.add(deleteBookBtn); btnPanel.add(clearBookBtn);
@@ -296,7 +330,7 @@ public class LibraryUI extends JFrame {
         gbc.gridx = 0; gbc.gridy = 3; studentForm.add(new JLabel("Senha:"), gbc);
         gbc.gridx = 1; studentForm.add(passwordField, gbc);
 
-        //JPanel to hold the action buttons for managing users, using a GridLayout to arrange the buttons in a 2x2 grid with spacing between them.
+        // JPanel to hold the action buttons for managing users, using a GridLayout to arrange the buttons in a 2x2 grid with spacing between them.
         JPanel btnPanel = new JPanel(new GridLayout(2, 2, 5, 5));
         btnPanel.add(addStudentBtn); btnPanel.add(editStudentBtn);
         btnPanel.add(deleteStudentBtn); btnPanel.add(clearStudentBtn);
@@ -378,7 +412,7 @@ public class LibraryUI extends JFrame {
         gbc.gridx = 0; gbc.gridy = 3; gbc.gridwidth = 2; gbc.weighty = 1.0;
         loanLeftPanel.add(new JPanel(), gbc);
 
-        // Set up the loans table with a row sorter for enabling sorting functionality
+        // Set up the loans table with a row sorter for enabling sorting functionality.
         loanTable.setRowSorter(loanSorter);
         JPanel tablePanel = new JPanel(new BorderLayout(5, 5));
         tablePanel.add(new JScrollPane(loanTable), BorderLayout.CENTER);
@@ -389,7 +423,7 @@ public class LibraryUI extends JFrame {
     }
 
     /**
-     * Method to set up the "Reports" tab of the UI, which includes components for filtering and displaying reports related to loans,
+     * Method to set up the "Reports" tab of the UI, which includes components for filtering and displaying reports related to loans.
      */
     private void setupReportsTab() {
         JPanel panel = new JPanel(new BorderLayout(10, 10));
@@ -422,10 +456,10 @@ public class LibraryUI extends JFrame {
         controlsPanel.add(searchRow);
         controlsPanel.add(buttonRow);
 
-        // Set up the reports table with a row sorter for enabling sorting functionality,
+        // Set up the reports table with a row sorter for enabling sorting functionality.
         reportTable.setRowSorter(reportSorter);
         
-        // Add the controls panel to the top of the reports tab and the reports table in the center within a scroll pane,
+        // Add the controls panel to the top of the reports tab and the reports table in the center within a scroll pane.
         panel.add(controlsPanel, BorderLayout.NORTH);
         panel.add(new JScrollPane(reportTable), BorderLayout.CENTER);
         
@@ -433,91 +467,321 @@ public class LibraryUI extends JFrame {
     }
 
     /**
-     * GETTERS for the main components of the UI, allowing other classes (such as controllers) 
-     * to access and interact with the various elements of the user interface.
-     * * @return The respective structural component or form panel.
+     * Gets the form panel responsible for book data entry and editing.
+     * * @return The book form JPanel object.
      */
     public JPanel getBookForm() { return bookForm; }
+
+    /**
+     * Gets the form panel responsible for student data entry and editing.
+     * * @return The student form JPanel object.
+     */
     public JPanel getStudentForm() { return studentForm; }
+
+    /**
+     * Gets the main tabbed pane that holds the application's sections.
+     * * @return The JTabbedPane component.
+     */
     public JTabbedPane getTabbedPane() { return tabbedPane; }
+
+    /**
+     * Gets the logout trigger button component.
+     * * @return The logout JButton object.
+     */
     public JButton getLogoutBtn() { return logoutBtn; }
 
     /**
-     * GETTERS for the filter fields in the loan management section, allowing other classes 
-     * to access these fields for implementing dynamic filtering of the book and student combo boxes when creating a new loan.
-     * * @return The text filter fields.
+     * Gets the text filter field used to dynamically search the book combo box in the loan section.
+     * * @return The book filter JTextField object.
      */
     public JTextField getBookFilterField() { return bookFilterField; }
+
+    /**
+     * Gets the text filter field used to dynamically search the student combo box in the loan section.
+     * * @return The student filter JTextField object.
+     */
     public JTextField getStudentFilterField() { return studentFilterField; }
 
     /**
-     * GETTERS for the book management components, allowing other classes 
-     * to access the text fields, buttons, and table related to managing books in the library system.
-     * * @return The respective text fields, buttons, or table components for books.
+     * Gets the text input field used for searching and filtering the books table.
+     * * @return The book search JTextField object.
      */
     public JTextField getBookSearchField() { return bookSearchField; }
+
+    /**
+     * Gets the book title text input field.
+     * * @return The title JTextField object.
+     */
     public JTextField getTitleField() { return titleField; }
+
+    /**
+     * Gets the book author text input field.
+     * * @return The author JTextField object.
+     */
     public JTextField getAuthorField() { return authorField; }
+
+    /**
+     * Gets the book ISBN code text input field.
+     * * @return The ISBN JTextField object.
+     */
     public JTextField getIsbnField() { return isbnField; }
+
+    /**
+     * Gets the book genre/category text input field.
+     * * @return The genre JTextField object.
+     */
     public JTextField getGenreField() { return genreField; }
+
+    /**
+     * Gets the book publication year text input field.
+     * * @return The publication year JTextField object.
+     */
     public JTextField getYearField() { return yearField; }
+
+    /**
+     * Gets the book available copies quantity text input field.
+     * * @return The quantity JTextField object.
+     */
     public JTextField getQtyField() { return qtyField; }
+
+    /**
+     * Gets the action button component used to add a new book to the inventory.
+     * * @return The add book JButton object.
+     */
     public JButton getAddBookBtn() { return addBookBtn; }
+
+    /**
+     * Gets the action button component used to edit existing book details.
+     * * @return The edit book JButton object.
+     */
     public JButton getEditBookBtn() { return editBookBtn; }
+
+    /**
+     * Gets the action button component used to delete a book from the inventory.
+     * * @return The delete book JButton object.
+     */
     public JButton getDeleteBookBtn() { return deleteBookBtn; }
+
+    /**
+     * Gets the utility button used to clear input text boxes in the book form.
+     * * @return The clear book fields JButton object.
+     */
     public JButton getClearBookBtn() { return clearBookBtn; }
+
+    /**
+     * Gets the core data table element displaying cataloged library books.
+     * * @return The book inventory JTable object.
+     */
     public JTable getBookTable() { return bookTable; }
+
+    /**
+     * Gets the table model mapping the data structure for the books grid.
+     * * @return The book table DefaultTableModel object.
+     */
     public DefaultTableModel getBookModel() { return bookModel; }
+
+    /**
+     * Gets the sorting mechanism attached to the books table.
+     * * @return The TableRowSorter for the book table.
+     */
     public TableRowSorter<DefaultTableModel> getBookSorter() { return bookSorter; }
 
     /**
-     * GETTERS for the user management components, allowing other classes.
-     * * @return The respective components for student management.
+     * Gets the text field used for dynamically filtering the students table.
+     * * @return The patron search JTextField object.
      */
     public JTextField getPatronSearchField() { return patronSearchField; }
+
+    /**
+     * Gets the student name text box element inside the user form.
+     * * @return The name JTextField object.
+     */
     public JTextField getNameField() { return nameField; }
+
+    /**
+     * Gets the student registration number (RA) text field.
+     * * @return The RA JTextField object.
+     */
     public JTextField getRaField() { return raField; }
+
+    /**
+     * Gets the student contact details text field.
+     * * @return The contact JTextField object.
+     */
     public JTextField getContactField() { return contactField; }
+
+    /**
+     * Gets the secure password entry container for the student.
+     * * @return The password JPasswordField object.
+     */
     public JPasswordField getPasswordField() { return passwordField; }
+
+    /**
+     * Gets the button that triggers the addition of a new student profile.
+     * * @return The add student JButton object.
+     */
     public JButton getAddStudentBtn() { return addStudentBtn; }
+
+    /**
+     * Gets the button that triggers the update of an existing student profile.
+     * * @return The edit student JButton object.
+     */
     public JButton getEditStudentBtn() { return editStudentBtn; }
+
+    /**
+     * Gets the button designed to delete a student profile from the system.
+     * * @return The delete student JButton object.
+     */
     public JButton getDeleteStudentBtn() { return deleteStudentBtn; }
+
+    /**
+     * Gets the button that resets all text inputs in the student registration form.
+     * * @return The clear student fields JButton object.
+     */
     public JButton getClearStudentBtn() { return clearStudentBtn; }
+
+    /**
+     * Gets the main grid table displaying registered students.
+     * * @return The student JTable object.
+     */
     public JTable getStudentTable() { return studentTable; }
+
+    /**
+     * Gets the underlying data structure model for the students table.
+     * * @return The student DefaultTableModel object.
+     */
     public DefaultTableModel getStudentModel() { return studentModel; }
+
+    /**
+     * Gets the column sorting mechanism for the students table.
+     * * @return The TableRowSorter for the student table.
+     */
     public TableRowSorter<DefaultTableModel> getStudentSorter() { return studentSorter; }
 
     /**
-     * GETTERS for the loan management components, allowing other classes 
-     * to access the text fields, combo boxes, buttons, and table related to managing loans in the library system.
-     * * @return The loan management interface components.
+     * Gets the text input field used for searching and filtering the loans table.
+     * * @return The loan search JTextField object.
      */
     public JTextField getLoanSearchField() { return loanSearchField; }
+
+    /**
+     * Gets the combo box drop-down that manages book selection for checkout.
+     * * @return The loan book JComboBox object.
+     */
     public JComboBox<Book> getLoanBookCombo() { return loanBookCombo; }
+
+    /**
+     * Gets the combo box drop-down providing pickable student records for loan assignment.
+     * * @return The loan student JComboBox object.
+     */
     public JComboBox<Student> getLoanStudentCombo() { return loanStudentCombo; }
+
+    /**
+     * Gets the sub-panel container holding the specific form inputs for a new loan operation.
+     * * @return The new loan fields JPanel object.
+     */
     public JPanel getNewLoanFieldsPanel() { return newLoanFieldsPanel; }
+
+    /**
+     * Gets the transaction button used to execute the loan checkout process.
+     * * @return The checkout JButton object.
+     */
     public JButton getCheckoutBtn() { return checkoutBtn; }
+
+    /**
+     * Gets the button tasked with concluding an active loan via a book return.
+     * * @return The return JButton object.
+     */
     public JButton getReturnBtn() { return returnBtn; }
+
+    /**
+     * Gets the button used to recalculate and extend the due date of a selected loan.
+     * * @return The renew JButton object.
+     */
     public JButton getRenewBtn() { return renewBtn; } 
+
+    /**
+     * Gets the core data table representing active and past loan operations.
+     * * @return The loan JTable object.
+     */
     public JTable getLoanTable() { return loanTable; }
+
+    /**
+     * Gets the template model defining data structures within the loans table.
+     * * @return The loan DefaultTableModel object.
+     */
     public DefaultTableModel getLoanModel() { return loanModel; }
+
+    /**
+     * Gets the sorting component responsible for ordering the loans table view.
+     * * @return The TableRowSorter for the loan table.
+     */
     public TableRowSorter<DefaultTableModel> getLoanSorter() { return loanSorter; }
 
     /**
-     * GETTERS for the report management components, allowing other classes 
-     * to access the text fields, buttons, and table related to generating and filtering reports in the library system.
-     * * @return The report management data and interactive components.
+     * Gets the generic text field handling overarching filtering across report lists.
+     * * @return The report search JTextField object.
      */
     public JTextField getReportSearchField() { return reportSearchField; }
+
+    /**
+     * Gets the text field where a specific student RA is input to generate targeted reports.
+     * * @return The report patron ID JTextField object.
+     */
     public JTextField getReportPatronField() { return reportPatronField; }
+
+    /**
+     * Gets the sub-panel housing the search elements for specific student history tracking.
+     * * @return The report patron JPanel object.
+     */
     public JPanel getReportPatronPanel() { return reportPatronPanel; } 
+
+    /**
+     * Gets the trigger button filtering the reports to show exclusively active loans.
+     * * @return The show active loans JButton object.
+     */
     public JButton getShowActiveLoansBtn() { return showActiveLoansBtn; }
+
+    /**
+     * Gets the trigger button limiting the report view strictly to overdue library loans.
+     * * @return The show overdue loans JButton object.
+     */
     public JButton getShowOverdueLoansBtn() { return showOverdueLoansBtn; }
+
+    /**
+     * Gets the button responsible for clearing constraints and showing the system's full loan history.
+     * * @return The show all history JButton object.
+     */
     public JButton getShowAllHistoryBtn() { return showAllHistoryBtn; }
+
+    /**
+     * Gets the button that fetches and limits the report view to the specified patron ID/RA history.
+     * * @return The show patron history JButton object.
+     */
     public JButton getShowPatronHistoryBtn() { return showPatronHistoryBtn; }
+
+    /**
+     * Gets the administrative control button tasked with resetting penalty fines down to zero.
+     * * @return The reset fine JButton object.
+     */
     public JButton getResetFineBtn() { return resetFineBtn; }
+
+    /**
+     * Gets the main tracking data grid utilized for comprehensive reports and audits.
+     * * @return The report JTable object.
+     */
     public JTable getReportTable() { return reportTable; }
+
+    /**
+     * Gets the layout template model mapping the cells within the system reports grid.
+     * * @return The report DefaultTableModel object.
+     */
     public DefaultTableModel getReportModel() { return reportModel; }
+
+    /**
+     * Gets the sorting and ordering engine attached to the history and reports table.
+     * * @return The TableRowSorter for the report table.
+     */
     public TableRowSorter<DefaultTableModel> getReportSorter() { return reportSorter; }
     
 }
