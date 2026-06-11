@@ -507,14 +507,6 @@ Todos os dados gerados durante a utilização serão armazenados automaticamente
 
 ---
 
-# 📌 Melhorias Futuras
-
-Possíveis melhorias futuras:
-
-- Interface mais moderna e amigável
-
----
-
 # 📄 Licença
 
 Projeto desenvolvido para fins acadêmicos na disciplina de Programação Orientada a Objetos.
