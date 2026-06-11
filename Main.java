@@ -1,9 +1,27 @@
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-// Class responsible for launching the library management application, handling user authentication, 
-// and managing the main session loop of the application.
+/**
+ * Entry point of the library management application.
+ *
+ * <p>This class initializes the graphical interface, loads the persisted
+ * library data, and starts the user authentication and session workflow.</p>
+ * * @author André Watanabe
+ * @author Pedro Zanutto
+ * @author Isaac Ferreira
+ * @version 1.0
+ */
 public class Main {
+   
+    /**
+     * Starts the application.
+     *
+     * <p>The method configures the system look and feel, loads the saved
+     * library data, and starts the session loop responsible for user login
+     * and interface initialization.</p>
+     *
+     * @param args command-line arguments (not used).
+     */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             try {
@@ -18,9 +36,13 @@ public class Main {
         });
     }
 
-    // Recursive method to manage the session loop of the application. It displays the login dialog, and upon successful authentication, 
-    // it launches the main library UI. If the user logs out, it disposes of the current UI and restarts the session loop, 
-    // allowing for a new login without restarting the application.
+    /**
+     * Recursive method to manage the session loop of the application. It displays the login dialog, 
+     * and upon successful authentication, it launches the main library UI. If the user logs out, 
+     * it disposes of the current UI and restarts the session loop, allowing for a new login 
+     * without restarting the application.
+     * * @param library the active library instance containing system data
+     */
     private static void runSessionLoop(Library library) {
         LoginDialog login = new LoginDialog(null, library);
         login.setVisible(true);

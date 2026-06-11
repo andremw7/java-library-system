@@ -4,21 +4,32 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 
-// Class representing the main user interface of the library management system. 
-// It extends JFrame to create a windowed application and contains all the components and layouts for managing books, users, loans, and reports.
+/**
+ * Class representing the main user interface of the library management system. 
+ * It extends JFrame to create a windowed application and contains all the components and layouts for managing books, users, loans, and reports.
+ * * @author André Watanabe
+ * @author Pedro Zanutto
+ * @author Isaac Ferreira
+ */
 public class LibraryUI extends JFrame {
    
-    // The role of the currently logged-in user (e.g., "admin" or "patron"). 
-    // This is used to control access to certain features and functionalities within the UI, ensuring that only authorized users can perform specific actions like adding or editing books and users.
+    /**
+     * The role of the currently logged-in user (e.g., "admin" or "patron"). 
+     * This is used to control access to certain features and functionalities within the UI, ensuring that only authorized users can perform specific actions like adding or editing books and users.
+     */
     private final String userRole;
     private final JTabbedPane tabbedPane = new JTabbedPane();
 
-    // Panels for the different sections of the UI: one for managing books and another for managing users.
+    /**
+     * Panels for the different sections of the UI: one for managing books and another for managing users.
+     */
     private final JPanel bookForm = new JPanel(new GridBagLayout());
     private final JPanel studentForm = new JPanel(new GridBagLayout());
 
-    // Book management components, including text fields for entering book details, 
-    // buttons for performing actions (add, edit, delete, clear), and a table to display the list of books with sorting capabilities.
+    /**
+     * Book management components, including text fields for entering book details, 
+     * buttons for performing actions (add, edit, delete, clear), and a table to display the list of books with sorting capabilities.
+     */
     private final JTextField bookSearchField = new JTextField(22);
     private final JTextField titleField = new JTextField(14);
     private final JTextField authorField = new JTextField(14);
@@ -36,8 +47,10 @@ public class LibraryUI extends JFrame {
     private final JTable bookTable = new JTable(bookModel);
     private final TableRowSorter<DefaultTableModel> bookSorter = new TableRowSorter<>(bookModel);
 
-    // User management components, including text fields for entering user details, 
-    // buttons for performing actions (add, edit, delete, clear), and a table to display the list of users with sorting capabilities.
+    /**
+     * User management components, including text fields for entering user details, 
+     * buttons for performing actions (add, edit, delete, clear), and a table to display the list of users with sorting capabilities.
+     */
     private final JTextField patronSearchField = new JTextField(22);
     private final JTextField nameField = new JTextField(14);
     private final JTextField raField = new JTextField(14);
@@ -53,56 +66,77 @@ public class LibraryUI extends JFrame {
     private final JTable studentTable = new JTable(studentModel);
     private final TableRowSorter<DefaultTableModel> studentSorter = new TableRowSorter<>(studentModel);
 
-    // Loan management components, including text fields for searching and filtering loans, 
-    // combo boxes for selecting books and students when creating a new loan, buttons for performing loan actions (checkout, return, renew), 
-    // and a table to display the list of loans with sorting capabilities.
+    /**
+     * Loan management components, including text fields for searching and filtering loans, 
+     * combo boxes for selecting books and students when creating a new loan, buttons for performing loan actions (checkout, return, renew), 
+     * and a table to display the list of loans with sorting capabilities.
+     */
     private final JTextField loanSearchField = new JTextField(22);
     
-    // Aditional text fields for filtering the book and student combo boxes in the loan management section. 
-    // while the loanSearchField is for filtering the loans table, 
-    // these fields allow users to quickly find and select the desired book and student when creating a new loan, 
-    // enhancing the user experience by providing dynamic search capabilities within the loan creation process.
+    /**
+     * Aditional text fields for filtering the book and student combo boxes in the loan management section. 
+     * while the loanSearchField is for filtering the loans table, 
+     * these fields allow users to quickly find and select the desired book and student when creating a new loan, 
+     * enhancing the user experience by providing dynamic search capabilities within the loan creation process.
+     */
     private final JTextField bookFilterField = new JTextField(14);
     private final JTextField studentFilterField = new JTextField(14);
     
-    // Combo boxes for selecting a book and a student when creating a new loan.
+    /**
+     * Combo boxes for selecting a book and a student when creating a new loan.
+     */
     private final JComboBox<Book> loanBookCombo = new JComboBox<>();
     private final JComboBox<Student> loanStudentCombo = new JComboBox<>();
     private final JPanel newLoanFieldsPanel = new JPanel(new GridBagLayout()); 
 
-    // Buttons for performing loan actions: checking out a book, returning a book, and renewing a loan.
+    /**
+     * Buttons for performing loan actions: checking out a book, returning a book, and renewing a loan.
+     */
     private final JButton checkoutBtn = new JButton("Emprestar");
     private final JButton returnBtn = new JButton("Devolver");
     private final JButton renewBtn = new JButton("Renovar Empréstimo"); 
 
-    // Table model and table for displaying the list of loans, along with a sorter for enabling sorting functionality on the loans table.
+    /**
+     * Table model and table for displaying the list of loans, along with a sorter for enabling sorting functionality on the loans table.
+     */
     private final DefaultTableModel loanModel = createModel(new String[]{"Livro", "Estudante", "Empréstimo", "Vencimento", "Status"});
     private final JTable loanTable = new JTable(loanModel);
     private final TableRowSorter<DefaultTableModel> loanSorter = new TableRowSorter<>(loanModel);
 
-    // Report management components, including text fields for searching and filtering reports
+    /**
+     * Report management components, including text fields for searching and filtering reports
+     */
     private final JTextField reportSearchField = new JTextField(22);
     private final JTextField reportPatronField = new JTextField(10);
     private final JPanel reportPatronPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0)); 
 
-    // Buttons for filtering reports based on different criteria
+    /**
+     * Buttons for filtering reports based on different criteria
+     */
     private final JButton showActiveLoansBtn = new JButton("Ativos");
     private final JButton showOverdueLoansBtn = new JButton("Atrasados");
     private final JButton showAllHistoryBtn = new JButton("Histórico Geral");
     private final JButton showPatronHistoryBtn = new JButton("Buscar por ID/RA");
     private final JButton resetFineBtn = new JButton("Resetar Multa");
 
-    // Table model and table for displaying the list of reports, along with a sorter for enabling sorting functionality on the reports table.
+    /**
+     * Table model and table for displaying the list of reports, along with a sorter for enabling sorting functionality on the reports table.
+     */
     private final DefaultTableModel reportModel = createModel(new String[]{"Livro", "Estudante", "ID/RA", "Empréstimo", "Vencimento", "Devolução", "Multa", "Status"});
     private final JTable reportTable = new JTable(reportModel);
     private final TableRowSorter<DefaultTableModel> reportSorter = new TableRowSorter<>(reportModel);
 
-    // Button for logging out of the system
+    /**
+     * Button for logging out of the system
+     */
     private final JButton logoutBtn = new JButton("Encerrar Sessão");
 
-    // Constructor for the LibraryUI class, which initializes the user interface based on the role of the logged-in user. 
-    // It sets up the main window, creates the different tabs for managing books, 
-    // users, loans, and reports, and configures the layout and components for each section of the UI.
+    /**
+     * Constructor for the LibraryUI class, which initializes the user interface based on the role of the logged-in user. 
+     * It sets up the main window, creates the different tabs for managing books, 
+     * users, loans, and reports, and configures the layout and components for each section of the UI.
+     * * @param userRole The role of the currently logged-in user.
+     */
     public LibraryUI(String userRole) {
         this.userRole = userRole;
         setTitle("Sistema de Gestão de Biblioteca - Perfil: " + userRole.toUpperCase());
@@ -142,7 +176,10 @@ public class LibraryUI extends JFrame {
         add(mainPanel);
     }
 
-    // Method to enable or disable admin controls based on the user's role.
+    /**
+     * Method to enable or disable admin controls based on the user's role.
+     * * @param enabled True to enable controls, false to disable.
+     */
     public void setAdminControlsEnabled(boolean enabled) {
         addBookBtn.setEnabled(enabled);
         editBookBtn.setEnabled(enabled);
@@ -167,7 +204,11 @@ public class LibraryUI extends JFrame {
         passwordField.setEditable(enabled);
     }
 
-    // Helper method to create a non-editable table model with specified column names.
+    /**
+     * Helper method to create a non-editable table model with specified column names.
+     * * @param columns The column names array.
+     * @return A custom DefaultTableModel where cell editing is disabled.
+     */
     private DefaultTableModel createModel(String[] columns) {
         return new DefaultTableModel(columns, 0) {
             @Override
@@ -178,8 +219,10 @@ public class LibraryUI extends JFrame {
         };
     }
 
-    // Method to set up the "Books" tab of the UI, which includes a form for adding and editing books,
-    // a table for displaying the list of books, and a search field for filtering the books table.
+    /**
+     * Method to set up the "Books" tab of the UI, which includes a form for adding and editing books,
+     * a table for displaying the list of books, and a search field for filtering the books table.
+     */
     private void setupBooksTab() {
         JPanel panel = new JPanel(new BorderLayout(10, 10));
         bookForm.setLayout(new GridBagLayout());
@@ -229,8 +272,10 @@ public class LibraryUI extends JFrame {
         tabbedPane.addTab("Livros", panel);
     }
 
-    // Method to set up the "Users" tab of the UI, which includes a form for adding and editing users,
-    // a table for displaying the list of users, and a search field for filtering the users table.
+    /**
+     * Method to set up the "Users" tab of the UI, which includes a form for adding and editing users,
+     * a table for displaying the list of users, and a search field for filtering the users table.
+     */
     private void setupStudentsTab() {
         JPanel panel = new JPanel(new BorderLayout(10, 10));
         studentForm.setLayout(new GridBagLayout());
@@ -278,9 +323,11 @@ public class LibraryUI extends JFrame {
         tabbedPane.addTab("Usuários", panel);
     }
 
-    // Method to set up the "Loans" tab of the UI, which includes components for managing book loans, 
-    // such as filtering options, combo boxes for selecting books and students, action buttons for loan operations,
-    //  and a table for displaying the list of loans.
+    /**
+     * Method to set up the "Loans" tab of the UI, which includes components for managing book loans, 
+     * such as filtering options, combo boxes for selecting books and students, action buttons for loan operations,
+     * and a table for displaying the list of loans.
+     */
     private void setupLoansTab() {
         JPanel panel = new JPanel(new BorderLayout(10, 10));
         JPanel loanLeftPanel = new JPanel(new GridBagLayout());
@@ -341,7 +388,9 @@ public class LibraryUI extends JFrame {
         tabbedPane.addTab("Empréstimos", panel);
     }
 
-    // Method to set up the "Reports" tab of the UI, which includes components for filtering and displaying reports related to loans,
+    /**
+     * Method to set up the "Reports" tab of the UI, which includes components for filtering and displaying reports related to loans,
+     */
     private void setupReportsTab() {
         JPanel panel = new JPanel(new BorderLayout(10, 10));
         
@@ -383,20 +432,29 @@ public class LibraryUI extends JFrame {
         tabbedPane.addTab("Relatórios", panel);
     }
 
-    // GETTERS for the main components of the UI, allowing other classes (such as controllers) 
-    // to access and interact with the various elements of the user interface
+    /**
+     * GETTERS for the main components of the UI, allowing other classes (such as controllers) 
+     * to access and interact with the various elements of the user interface.
+     * * @return The respective structural component or form panel.
+     */
     public JPanel getBookForm() { return bookForm; }
     public JPanel getStudentForm() { return studentForm; }
     public JTabbedPane getTabbedPane() { return tabbedPane; }
     public JButton getLogoutBtn() { return logoutBtn; }
 
-    // GETTERS for the filter fields in the loan management section, allowing other classes 
-    // to access these fields for implementing dynamic filtering of the book and student combo boxes when creating a new loan.
+    /**
+     * GETTERS for the filter fields in the loan management section, allowing other classes 
+     * to access these fields for implementing dynamic filtering of the book and student combo boxes when creating a new loan.
+     * * @return The text filter fields.
+     */
     public JTextField getBookFilterField() { return bookFilterField; }
     public JTextField getStudentFilterField() { return studentFilterField; }
 
-    // GETTERS for the book management components, allowing other classes 
-    // to access the text fields, buttons, and table related to managing books in the library system.
+    /**
+     * GETTERS for the book management components, allowing other classes 
+     * to access the text fields, buttons, and table related to managing books in the library system.
+     * * @return The respective text fields, buttons, or table components for books.
+     */
     public JTextField getBookSearchField() { return bookSearchField; }
     public JTextField getTitleField() { return titleField; }
     public JTextField getAuthorField() { return authorField; }
@@ -412,7 +470,10 @@ public class LibraryUI extends JFrame {
     public DefaultTableModel getBookModel() { return bookModel; }
     public TableRowSorter<DefaultTableModel> getBookSorter() { return bookSorter; }
 
-    // GETTERS for the user management components, allowing other classes
+    /**
+     * GETTERS for the user management components, allowing other classes.
+     * * @return The respective components for student management.
+     */
     public JTextField getPatronSearchField() { return patronSearchField; }
     public JTextField getNameField() { return nameField; }
     public JTextField getRaField() { return raField; }
@@ -426,8 +487,11 @@ public class LibraryUI extends JFrame {
     public DefaultTableModel getStudentModel() { return studentModel; }
     public TableRowSorter<DefaultTableModel> getStudentSorter() { return studentSorter; }
 
-    // GETTERS for the loan management components, allowing other classes 
-    // to access the text fields, combo boxes, buttons, and table related to managing loans in the library system.
+    /**
+     * GETTERS for the loan management components, allowing other classes 
+     * to access the text fields, combo boxes, buttons, and table related to managing loans in the library system.
+     * * @return The loan management interface components.
+     */
     public JTextField getLoanSearchField() { return loanSearchField; }
     public JComboBox<Book> getLoanBookCombo() { return loanBookCombo; }
     public JComboBox<Student> getLoanStudentCombo() { return loanStudentCombo; }
@@ -439,8 +503,11 @@ public class LibraryUI extends JFrame {
     public DefaultTableModel getLoanModel() { return loanModel; }
     public TableRowSorter<DefaultTableModel> getLoanSorter() { return loanSorter; }
 
-    // GETTERS for the report management components, allowing other classes 
-    // to access the text fields, buttons, and table related to generating and filtering reports in the library system
+    /**
+     * GETTERS for the report management components, allowing other classes 
+     * to access the text fields, buttons, and table related to generating and filtering reports in the library system.
+     * * @return The report management data and interactive components.
+     */
     public JTextField getReportSearchField() { return reportSearchField; }
     public JTextField getReportPatronField() { return reportPatronField; }
     public JPanel getReportPatronPanel() { return reportPatronPanel; } 

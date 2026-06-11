@@ -6,12 +6,27 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import javax.swing.JOptionPane;
 
-// Class responsible for managing the persistence of the library data, including saving and loading the library state to and from a file.
+/**
+ * Class responsible for managing the persistence of the library data, 
+ * including saving and loading the library state to and from a file.
+ * 
+ * @author André Watanabe
+ * @author Pedro Zanutto
+ * @author Isaac Ferreira
+ * @version 1.0
+ */
 public class DataManager {
+    /**
+     * The standard file path name used for data persistence.
+     */
     private static final String FILE_NAME = "biblioteca_dados.dat";
 
-    // Method to save the current state of the library to a file. 
-    // It uses ObjectOutputStream to serialize the Library object and write it to the specified file.
+    /**
+     * Method to save the current state of the library to a file. 
+     * It uses ObjectOutputStream to serialize the Library object and write it to the specified file.
+     * 
+     * @param library the Library instance containing all system state data to save
+     */
     public static void save(Library library) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
             oos.writeObject(library);
@@ -24,7 +39,11 @@ public class DataManager {
         }
     }
 
-    // Method to load the library state from a file. It uses ObjectInputStream to deserialize the Library object from the specified file.
+    /**
+     * Method to load the library state from a file. It uses ObjectInputStream to deserialize the Library object from the specified file.
+     * 
+     * @return the deserialized Library instance filled with system state, or a fresh new Library if data does not exist or errors happen
+     */
     public static Library load() {
         File file = new File(FILE_NAME);
         

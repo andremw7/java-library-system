@@ -8,8 +8,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-// This class connects the Library data with the LibraryUI screen. 
-// It controls the business logic, actions, and validates user inputs.
+/**
+ * Class that acts as the Controller, connecting the Library data (Model) 
+ * with the user interface (LibraryUI/View). It controls the business logic, 
+ * actions (ActionListeners), and validates user inputs in the graphical interface.
+ *
+ * @author André Watanabe
+ * @author Pedro Zanutto
+ * @author Isaac Ferreira
+ * @version 1.0
+ */
 public class LibraryController {
     private final Library library;
     private final LibraryUI view;
@@ -34,8 +42,14 @@ public class LibraryController {
         PATRON_HISTORY
     }
 
-    // Constructor: Connects the components, sets permissions, and loads initial data into the interface tables. 
-    // It also makes the main view visible to the user.
+    /**
+     * Constructor for LibraryController. Connects the components, sets visual permissions, 
+     * loads initial data into tables, and makes the main screen visible.
+     *
+     * @param library The main instance of the library system (Model).
+     * @param view The main graphical user interface of the system (View).
+     * @param userRole The role of the authenticated user (e.g., "admin", "bibliotecario", "estudante:RA").
+     */
     public LibraryController(Library library, LibraryUI view, String userRole) {
         this.library = library;
         this.view = view;
@@ -46,24 +60,34 @@ public class LibraryController {
         this.view.setVisible(true);
     }
 
-    // Setter for the logout action, allowing the controller to trigger a logout process defined externally, 
-    // such as returning to the login screen or closing the application.
+    /**
+     * Setter for the logout action, allowing the controller to trigger a logout process defined externally, 
+     * such as returning to the login screen or closing the application.
+     */
     public void setLogoutAction(Runnable logoutAction) {
         this.logoutAction = logoutAction;
     }
 
-    // Access Control Method: Shows or hides UI elements based on the user logged in (Administrator, Librarian, or Student), 
-    // ensuring that users can only access features and data relevant to their role.
+    /**
+     * Access Control Method: Shows or hides UI elements based on the user logged in (Administrator, Librarian, or Student), 
+     * ensuring that users can only access features and data relevant to their role.
+     */
     private void applyPermissions() {
         boolean isAdmin = "admin".equalsIgnoreCase(userRole);
         boolean isBibliotecario = "bibliotecario".equalsIgnoreCase(userRole);
         boolean isEstudante = userRole != null && userRole.startsWith("estudante:");
 
-        // Admin and Librarian can view loan panels; Admin can view form inputs
-        view.getNewLoanFieldsPanel().setVisible(isAdmin || isBibliotecario);
+        // UI Form restrictions: Only Admin can view and use the input forms to Add, Edit or Delete Books and Students
         view.getBookForm().setVisible(isAdmin);
         view.getStudentForm().setVisible(isAdmin);
-        view.setAdminControlsEnabled(isAdmin);
+        
+        // Ensure any other general admin controls provided by the UI are toggled correctly
+        if (isAdmin) {
+            view.setAdminControlsEnabled(true);
+        } else {
+            // Use try-catch safely in case this method throws an error for non-admins in your specific UI implementation
+            try { view.setAdminControlsEnabled(false); } catch (Exception ignored) {}
+        }
 
         // UI adjustments if the logged-in user is a Student - 
         // significantly restricts access to features and data, allowing only viewing of books and their own loan history, 
@@ -119,28 +143,53 @@ public class LibraryController {
             JOptionPane.showMessageDialog(view,
                     "Bem-vindo! Você acessou como Estudante.\nSua conta permite visualizar os livros e solicitar a renovação dos seus empréstimos ativos.",
                     "Controle de Acesso", JOptionPane.INFORMATION_MESSAGE);
+
         } else if (isBibliotecario) {
             
             // UI adjustments if the logged-in user is a Librarian
+            // Librarians handle day-to-day operations: Making loans, returning, and renewing books.
+            view.getNewLoanFieldsPanel().setVisible(true);
+            
+            view.getCheckoutBtn().setVisible(true);
             view.getCheckoutBtn().setEnabled(true);
+            
+            view.getReturnBtn().setVisible(true);
             view.getReturnBtn().setEnabled(true);
+            
+            view.getRenewBtn().setVisible(true);
             view.getRenewBtn().setEnabled(true);
+            
             view.getLoanBookCombo().setEnabled(true);
             view.getLoanStudentCombo().setEnabled(true);
 
+            // Librarian CANNOT reset fines. This is an Admin exclusive feature.
+            view.getResetFineBtn().setVisible(false);
+
             JOptionPane.showMessageDialog(view,
-                    "Você acessou como Bibliotecário.\nFunções de Adicionar, Editar e Excluir Livros/Usuários estão desativadas.",
+                    "Você acessou como Bibliotecário.\nOperações diárias liberadas. Funções de Adicionar/Editar Livros e Usuários estão desativadas.",
                     "Controle de Acesso", JOptionPane.INFORMATION_MESSAGE);
+
         } else if (isAdmin) {
 
-            // UI adjustments if the logged-in user is an Admin - full access to all features and data
-            view.getCheckoutBtn().setEnabled(true);
+            // UI adjustments if the logged-in user is an Admin
+            // Admin manages records and resets fines. They DO NOT execute daily checkouts or renewals.
+            view.getNewLoanFieldsPanel().setVisible(false); // Hides the dropdowns for new loans
+            view.getCheckoutBtn().setVisible(false);        // Hides checkout confirmation
+            view.getRenewBtn().setVisible(false);           // Hides renew button
+            
+            // Admin CAN register returns
+            view.getReturnBtn().setVisible(true);
             view.getReturnBtn().setEnabled(true);
-            view.getRenewBtn().setEnabled(true);
+            
+            // Admin MUST be able to reset fines (Exclusive access)
+            view.getResetFineBtn().setVisible(true);
+            view.getResetFineBtn().setEnabled(true);
         }
     }
 
-    // Interaction Setup Method: Binds button clicks and selection changes to specific actions
+    /**
+     * Interaction Setup Method: Binds button clicks and selection changes to specific actions.
+     */
     private void initListeners() {
         view.getLogoutBtn().addActionListener(e -> {
             if (confirm("Deseja realmente encerrar a sessão atual e voltar ao login?")) {
@@ -158,7 +207,8 @@ public class LibraryController {
         setupSearchFilter(view.getBookSearchField(), view.getBookSorter());
 
        
-        // Event listener to auto-fill input fields when a book is selected in the table, but only if the user has admin permissions to edit books
+        // Event listener to auto-fill input fields when a book is selected in the table, 
+        // but only if the user has admin permissions to edit books
         view.getBookTable().getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
                 int row = view.getBookTable().getSelectedRow();
@@ -237,8 +287,10 @@ public class LibraryController {
         view.getResetFineBtn().addActionListener(e -> runSafely(this::resetFine));
     }
 
-    // Handles extending a book return deadline by 14 days, but only if the book has at least 2 copies available in the library 
-    // to ensure that other users can still borrow it. This function is accessible to both Admin and Librarian roles, but not to Students.
+    /**
+     * Handles extending a book return deadline by 14 days, but only if the book has at least 2 copies available in the library 
+     * to ensure that other users can still borrow it. This function is accessible to both Admin and Librarian roles, but not to Students.
+     */
     private void renewBook() {
         int row = view.getLoanTable().getSelectedRow();
         requireSelected(row != -1 ? row : null, "Selecione um empréstimo ativo na tabela para renovar.");
@@ -264,9 +316,11 @@ public class LibraryController {
         showInfo("Empréstimo renovado com sucesso por mais 14 dias!");
     }
 
-    // Main update method to synchronize all interface tables with database changes, ensuring that any addition, modification, 
-    // or deletion of books, students, or loans is immediately reflected in the user interface. 
-    // This method is called after every operation that changes the library's data to maintain consistency and provide real-time feedback to the user.
+    /**
+     * Main update method to synchronize all interface tables with database changes, ensuring that any addition, modification, 
+     * or deletion of books, students, or loans is immediately reflected in the user interface. 
+     * This method is called after every operation that changes the library's data to maintain consistency and provide real-time feedback to the user.
+     */
     private void refreshAll() {
         refreshBookTable();
         refreshStudentTable();
@@ -275,9 +329,11 @@ public class LibraryController {
         refreshReports();
     }
 
-    // Reloads the table showing books information, clearing existing rows and repopulating it with the current list of books from the library. 
-    // This method ensures that any changes to the book inventory, 
-    // such as additions, edits, or deletions, are immediately visible to the user in the interface.
+    /**
+     * Reloads the table showing books information, clearing existing rows and repopulating it with the current list of books from the library. 
+     * This method ensures that any changes to the book inventory, 
+     * such as additions, edits, or deletions, are immediately visible to the user in the interface.
+     */
     private void refreshBookTable() {
         DefaultTableModel model = view.getBookModel();
         model.setRowCount(0);
@@ -286,8 +342,10 @@ public class LibraryController {
         }
     }
 
-    // Reloads the table showing student information, clearing existing rows and repopulating it with the current list of students from the library. 
-    // This method ensures that any changes to the student database, such as additions, edits, or deletions, are immediately visible to the user in the interface.
+    /**
+     * Reloads the table showing student information, clearing existing rows and repopulating it with the current list of students from the library. 
+     * This method ensures that any changes to the student database, such as additions, edits, or deletions, are immediately visible to the user in the interface.
+     */
     private void refreshStudentTable() {
         DefaultTableModel model = view.getStudentModel();
         model.setRowCount(0);
@@ -296,14 +354,17 @@ public class LibraryController {
         }
     }
     
-    // Refreshes the dropdown selection components based on quick filters typed by the user in the loan registration tab, 
-    // ensuring that the options for books and students are always relevant to the search query and reflect the current inventory and student database. 
-    // This method is called whenever the user types in the filter fields, providing a dynamic and responsive selection experience.
+    /**
+     * Refreshes the dropdown selection components based on quick filters typed by the user in the loan registration tab, 
+     * ensuring that the options for books and students are always relevant to the search query and reflect the current inventory and student database. 
+     * This method is called whenever the user types in the filter fields, providing a dynamic and responsive experience.
+     */
     private void refreshLoanCombos() {
         String bookQuery = view.getBookFilterField().getText().trim().toLowerCase();
         JComboBox<Book> bookCombo = view.getLoanBookCombo();
         bookCombo.removeAllItems();
         
+        // Only show books that have at least 1 available copy, and match the search query if provided
         for (Book b : library.getBooks()) {
             if (b.getAvailableCopies() > 0) {
                 if (bookQuery.isEmpty() || 
@@ -315,14 +376,17 @@ public class LibraryController {
             }
         }
         
+        // If the user is a student, we do not show the student selection box at all, so we can skip refreshing it
         if (userRole != null && userRole.startsWith("estudante:")) {
             return;
         }
 
+        // For the student combo box, we show all students that match the search query if provided, without additional availability filtering
         String studentQuery = view.getStudentFilterField().getText().trim().toLowerCase();
         JComboBox<Student> studentCombo = view.getLoanStudentCombo();
         studentCombo.removeAllItems();
         
+        // Only show students that match the search query if provided
         for (Student s : library.getStudents()) {
             if (studentQuery.isEmpty() || 
                 s.getName().toLowerCase().contains(studentQuery) || 
@@ -332,8 +396,10 @@ public class LibraryController {
         }
     }
 
-    // Reloads data inside the current open loans layout table, filtering only active loans and, if the logged-in user is a student, 
-    // showing only their own active loans.
+    /**
+     * Reloads data inside the current open loans layout table, filtering only active loans and, if the logged-in user is a student, 
+     * showing only their own active loans.
+     */
     private void refreshActiveLoansTable() {
         DefaultTableModel model = view.getLoanModel();
         model.setRowCount(0);
@@ -346,6 +412,7 @@ public class LibraryController {
                         continue;
                     }
                 }
+                // Only add active loans to the list and table model
                 currentActiveLoans.add(l);
                 model.addRow(new Object[]{
                         l.getBook().getTitle(),
@@ -358,11 +425,13 @@ public class LibraryController {
         }
     }
 
-    // Handles loading and filtering records in the historical report section, 
-    // allowing users to view different subsets of loan history based on their selection (active loans, overdue loans, complete history, 
-    // or specific patron history). 
-    // This method is called whenever the user changes the report filter mode or performs a search in the report section, 
-    // ensuring that the displayed data is always relevant to the user's current query and selection criteria.
+    /**
+     * Handles loading and filtering records in the historical report section, 
+     * allowing users to view different subsets of loan history based on their selection (active loans, overdue loans, complete history, 
+     * or specific patron history). 
+     * This method is called whenever the user changes the report filter mode or performs a search in the report section, 
+     * ensuring that the displayed data is always relevant to the user's current query and selection criteria.
+     */
     private void refreshReports() {
         DefaultTableModel model = view.getReportModel();
         model.setRowCount(0);
@@ -374,6 +443,8 @@ public class LibraryController {
             reportPatronId = userRole.substring("estudante:".length());
         }
 
+        // Filter loans based on the selected report mode, 
+        // ensuring that only relevant records are included in the report table according to the user's selection and permissions
         for (Loan l : source) {
             boolean include = false;
             switch (reportMode) {
@@ -390,6 +461,8 @@ public class LibraryController {
                     include = l.getStudent() != null && l.getStudent().getRa().equalsIgnoreCase(reportPatronId);
                     break;
             }
+            // Only add loans that match the filter criteria to the report list and table model, 
+            // ensuring that the report displays accurate and relevant information based on the user's selection
             if (include) {
                 currentReportLoans.add(l);
                 model.addRow(new Object[]{
@@ -406,10 +479,12 @@ public class LibraryController {
         }
     }
 
-    // Reads inputs, processes validations, and saves a new book record to the library. 
-    // This method is triggered when the user clicks the "Add Book" button, and it ensures that all required fields are filled out correctly, 
-    // that the ISBN is valid, and that the year and quantity are positive integers. 
-    // If any validation fails, an appropriate error message is shown to the user. Upon successful addition, the book list is refreshed to reflect the new entry.
+    /**
+     * Reads inputs, processes validations, and saves a new book record to the library. 
+     * This method is triggered when the user clicks the "Add Book" button, and it ensures that all required fields are filled out correctly, 
+     * that the ISBN is valid, and that the year and quantity are positive integers. 
+     * If any validation fails, an appropriate error message is shown to the user. Upon successful addition, the book list is refreshed to reflect the new entry.
+     */
     private void addBook() {
         String title = view.getTitleField().getText().trim();
         String author = view.getAuthorField().getText().trim();
@@ -429,7 +504,9 @@ public class LibraryController {
         showInfo("Livro adicionado com sucesso.");
     }
 
-    // Updates properties of an already existing book record based on user input
+    /**
+     * Updates properties of an already existing book record based on user input.
+     */
     private void editBook() {
         int row = view.getBookTable().getSelectedRow();
         requireSelected(row != -1 ? row : null, "Selecione um livro na tabela para editar.");
@@ -454,10 +531,12 @@ public class LibraryController {
         DataManager.save(library);
         refreshAll();
         clearBookFields();
-        showInfo("Livro atualizado com sucesso.");
+        showInfo("Livro updated com sucesso.");
     }
 
-    // Removes a book completely from the catalog configuration
+    /**
+     * Removes a book completely from the catalog configuration.
+     */
     private void deleteBook() {
         int row = view.getBookTable().getSelectedRow();
         requireSelected(row != -1 ? row : null, "Selecione um livro na tabela para excluir.");
@@ -475,8 +554,10 @@ public class LibraryController {
         }
     }
 
-    // Validates inputs and creates a new Student registration profile in the library system, 
-    // allowing them to borrow books and view their loan history.
+    /**
+     * Validates inputs and creates a new Student registration profile in the library system, 
+     * allowing them to borrow books and view their loan history.
+     */
     private void addStudent() {
         String name = view.getNameField().getText().trim();
         String ra = view.getRaField().getText().trim();
@@ -493,7 +574,9 @@ public class LibraryController {
         showInfo("Usuário adicionado com sucesso.");
     }
 
-    // Updates properties of an already existing user profile
+    /**
+     * Updates properties of an already existing user profile.
+     */
     private void editStudent() {
         int row = view.getStudentTable().getSelectedRow();
         requireSelected(row != -1 ? row : null, "Selecione um usuário na tabela para editar.");
@@ -518,7 +601,9 @@ public class LibraryController {
         showInfo("Usuário atualizado com sucesso.");
     }
 
-    // Deletes a student profile registration permanently
+    /**
+     * Deletes a student profile registration permanently.
+     */
     private void deleteStudent() {
         int row = view.getStudentTable().getSelectedRow();
         requireSelected(row != -1 ? row : null, "Selecione um usuário na tabela para excluir.");
@@ -536,7 +621,9 @@ public class LibraryController {
         }
     }
 
-    // Connects a chosen book to a student to register a new system loan
+    /**
+     * Connects a chosen book to a student to register a new system loan.
+     */
     private void checkoutBook() {
         Book book = (Book) view.getLoanBookCombo().getSelectedItem();
         Student student = (Student) view.getLoanStudentCombo().getSelectedItem();
@@ -549,7 +636,9 @@ public class LibraryController {
         showInfo("Empréstimo registrado com sucesso.");
     }
 
-    // Finishes an open transaction loan, calculating overdue fine statuses automatically
+    /**
+     * Finishes an open transaction loan, calculating overdue fine statuses automatically.
+     */
     private void returnBook() {
         int row = view.getLoanTable().getSelectedRow();
         requireSelected(row != -1 ? row : null, "Selecione um empréstimo na tabela para realizar a devolução.");
@@ -574,16 +663,19 @@ public class LibraryController {
         }
     }
 
-    // Waives or flags an existing fee balance statement as paid
+    /**
+     * Waives or flags an existing fee balance statement as paid.
+     */
     private void resetFine() {
         int row = view.getReportTable().getSelectedRow();
         requireSelected(row != -1 ? row : null, "Selecione um registro na tabela de relatórios para perdoar a multa.");
         int modelRow = view.getReportTable().convertRowIndexToModel(row);
         Loan selected = currentReportLoans.get(modelRow);
 
-        if (selected.calculateFine() <= 0 && selected.isFinePaid()) {
-            showInfo("Este registro não possui multa pendente.");
-            return;
+        // An admin should not be able to reset fines that are already paid or that do not have any fine, 
+        // as this would be an illogical operation and could indicate a misuse of the system's functionalities.
+        if (selected.calculateFine() <= 0 || selected.isFinePaid()) {
+            throw new IllegalArgumentException("Este registro não possui nenhuma multa pendente para ser resetada.");
         }
 
         if (confirm("Deseja perdoar/marcar como paga a multa deste registro?")) {
@@ -594,7 +686,9 @@ public class LibraryController {
         }
     }
 
-    // Clears all entry boxes related to the book input form section
+    /**
+     * Clears all entry boxes related to the book input form section.
+     */
     private void clearBookFields() {
         view.getTitleField().setText("");
         view.getAuthorField().setText("");
@@ -605,7 +699,9 @@ public class LibraryController {
         view.getBookTable().clearSelection();
     }
 
-    // Clears all entry boxes related to the student registration profile section
+    /**
+     * Clears all entry boxes related to the student registration profile section.
+     */
     private void clearStudentFields() {
         view.getNameField().setText("");
         view.getRaField().setText("");
@@ -614,7 +710,9 @@ public class LibraryController {
         view.getStudentTable().clearSelection();
     }
 
-    // Parses string values into safe integer values, verifying format requirements
+    /**
+     * Parses string values into safe integer values, verifying format requirements.
+     */
     private int parsePositiveInteger(String text, String fieldName, boolean allowZero) {
         if (text == null || text.trim().isEmpty()) {
             throw new IllegalArgumentException("O campo '" + fieldName + "' não pode estar em branco.");
@@ -636,7 +734,9 @@ public class LibraryController {
         }
     }
 
-    // Strictly enforces that text values contain only absolute positive numbers (No letters, negative signs, or symbols)
+    /**
+     * Strictly enforces that text values contain only absolute positive numbers (No letters, negative signs, or symbols).
+     */
     private void validateStrictPositiveIntegerString(String text, String fieldName) {
         if (text == null || text.trim().isEmpty()) {
             throw new IllegalArgumentException("O campo '" + fieldName + "' não pode estar em branco.");
@@ -647,7 +747,7 @@ public class LibraryController {
         if (text.contains(".") || text.contains(",")) {
             throw new IllegalArgumentException("O campo '" + fieldName + "' deve ser um número inteiro (não use pontos ou vírgulas).");
         }
-        // Validação via Regex: garante que a string tenha exclusivamente algarismos de 0 a 9
+        // Validation to ensure that the string contains only digits, preventing any non-numeric characters from being accepted,
         if (!text.matches("\\d+")) {
             throw new IllegalArgumentException("O campo '" + fieldName + "' deve conter apenas algarismos numéricos (letras ou caracteres especiais não são permitidos).");
         }
@@ -661,7 +761,9 @@ public class LibraryController {
         }
     }
 
-    // Links a live filtering tool to search components for instant updates as you type
+    /**
+     * Links a live filtering tool to search components for instant updates as you type.
+     */
     private void setupSearchFilter(JTextField field, TableRowSorter<DefaultTableModel> sorter) {
         field.getDocument().addDocumentListener(new DocumentListener() {
             public void insertUpdate(DocumentEvent e) { filter(); }
@@ -678,7 +780,9 @@ public class LibraryController {
         });
     }
 
-    // Monitors text input updates to refresh linked dropdown elements dynamically
+    /**
+     * Monitors text input updates to refresh linked dropdown elements dynamically.
+     */
     private void setupDynamicComboFilter(JTextField field, Runnable onFilterChange) {
         field.getDocument().addDocumentListener(new DocumentListener() {
             public void insertUpdate(DocumentEvent e) { onFilterChange.run(); }
@@ -687,7 +791,9 @@ public class LibraryController {
         });
     }
 
-    // Wraps runtime operations in safety blocks to catch errors and display warnings gracefully
+    /**
+     * Wraps runtime operations in safety blocks to catch errors and display warnings gracefully.
+     */
     private void runSafely(Action action) {
         try {
             action.run();
@@ -699,41 +805,55 @@ public class LibraryController {
         }
     }
 
-    // Validates that an objective collection context instance row selection is valid and not null, 
-    // throwing an error with a custom message if the validation fails.
+    /**
+     * Validates that an objective collection context instance row selection is valid and not null, 
+     * throwing an error with a custom message if the validation fails.
+     */
     private void requireSelected(Object object, String message) {
         if (object == null) {
             throw new IllegalArgumentException(message);
         }
     }
 
-    // Displays an absolute verification prompt modal overlay window interface
+    /**
+     * Displays an absolute verification prompt modal overlay window interface.
+     */
     private boolean confirm(String message) {
         return JOptionPane.showConfirmDialog(view, message, "Confirmação", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
     }
 
-    // Displays informational alert panel overlays to users with a custom message and an "OK" button to acknowledge
+    /**
+     * Displays informational alert panel overlays to users with a custom message and an "OK" button to acknowledge.
+     */
     private void showInfo(String message) {
         JOptionPane.showMessageDialog(view, message, "Informação", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    // Displays error notification popups to users with a custom message and an "OK" button to acknowledge, using a warning icon to indicate issues
+    /**
+     * Displays error notification popups to users with a custom message and an "OK" button to acknowledge, using a warning icon to indicate issues.
+     */
     private void showError(String message) {
         JOptionPane.showMessageDialog(view, message, "Atenção", JOptionPane.WARNING_MESSAGE);
     }
 
-    // Formats plain double data numbers into currency patterns (Brazilian Real)
+    /**
+     * Formats plain double data numbers into currency patterns (Brazilian Real).
+     */
     private String money(double value) {
         return String.format("R$ %.2f", value);
     }
 
-    // Safely transforms dates into readable strings or fallback hyphens if the date is null, 
-    // ensuring that the interface displays consistent and user-friendly date information without showing raw null values.
+    /**
+     * Safely transforms dates into readable strings or fallback hyphens if the date is null, 
+     * ensuring that the interface displays consistent and user-friendly date information without showing raw null values.
+     */
     private String formatDate(java.time.LocalDate date) {
         return date == null ? "-" : date.format(dateFormatter);
     }
 
-    // Simple functional utility blueprint used for safe runnable command pattern tasks
+    /**
+     * Simple functional utility blueprint used for safe runnable command pattern tasks.
+     */
     private interface Action {
         void run();
     }
