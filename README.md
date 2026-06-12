@@ -448,7 +448,7 @@ Antes de executar o projeto é necessário possuir:
 Clone o repositório utilizando:
 
 ```bash
-git clone <URL_DO_REPOSITORIO>
+git clone <https://github.com/andremw7/java-library-system.git>
 ```
 
 Ou faça o download do projeto em formato ZIP e extraia os arquivos.
