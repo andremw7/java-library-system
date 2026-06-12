@@ -168,9 +168,9 @@ O sistema possui dois tipos de usuários:
 
 | Perfil | Permissões |
 |---|---|
-| Administrador | Adiciona e edita livros e estudantes, resesta multas|
-| Bibliotecario | Realiza empréstimos e devoluções|
-| Usuário comum | Consulta e renovação de empréstimos |
+| Administrador | Adiciona, edita e remove livros e usuários, redefine multas e acessa todos os relatórios |
+| Bibliotecário | Realiza empréstimos, devoluções e consultas ao acervo |
+| Usuário comum | Consulta livros, visualiza histórico e solicita renovação de empréstimos |
 ---
 
 ## 💾 Persistência de Dados
@@ -181,10 +181,12 @@ Arquivo utilizado:
 
 ```text
 biblioteca_dados.dat
+
 ```
 
-Isso garante que os dados permaneçam salvos mesmo após o encerramento da aplicação.
+Durante o encerramento da aplicação, todas as alterações realizadas são automaticamente serializadas nesse arquivo.
 
+Ao iniciar novamente o sistema, os dados são restaurados, preservando livros cadastrados, usuários, empréstimos ativos, histórico e demais informações armazenadas anteriormente.
 ---
 
 # 🧠 Estrutura do Projeto
@@ -389,6 +391,7 @@ Durante o desenvolvimento surgiram alguns desafios importantes:
 - Tratamento de erros e exceções em entradas inválidas
 - Controle de permissões entre administrador e usuário comum
 - Melhorias na experiência do usuário em buscas e troca de sessão
+- Desenvolvimento de mecanismos para simulação temporal durante os testes de multas e vencimentos, permitindo validar rapidamente funcionalidades que dependeriam de vários dias de execução.
 
 ---
 
@@ -416,10 +419,15 @@ Os resultados obtidos foram:
 | Relatórios | ✅ Sucesso |
 | Persistência após reinicialização | ✅ Sucesso |
 | Controle de permissões | ✅ Sucesso |
+| Simulaçao avançar e voltar a data original | ✅ Sucesso |
 
 Durante os testes foram identificados pequenos problemas relacionados ao comportamento de alguns botões da interface, sincronização dos dados persistidos e organização visual dos componentes. Após as correções realizadas durante o desenvolvimento, o sistema apresentou funcionamento estável e consistente.
 
-Também foi verificado que os dados permanecem armazenados corretamente após o encerramento e reinicialização da aplicação, confirmando o funcionamento adequado da serialização utilizada.
+Foi verificado que os dados permanecem armazenados corretamente após o encerramento e reinicialização da aplicação, confirmando o funcionamento adequado da serialização utilizada.
+
+Também foram utilizados os botões de simulação temporal para validar rapidamente as funcionalidades relacionadas ao vencimento dos empréstimos, cálculo de multas e bloqueio de usuários inadimplentes.
+
+Os testes confirmaram que tanto o avanço quanto a restauração da data preservam corretamente a consistência das regras de negócio implementadas no sistema.
 
 ---
 
@@ -517,5 +525,7 @@ Projeto desenvolvido para fins acadêmicos na disciplina de Programação Orient
 O desenvolvimento deste projeto permitiu aplicar de forma prática diversos conceitos estudados na disciplina de Programação Orientada a Objetos, incluindo encapsulamento, herança, abstração, polimorfismo e organização modular do código.
 
 Além do aprendizado técnico, o trabalho proporcionou experiência no desenvolvimento colaborativo, na separação de responsabilidades entre componentes, na criação de interfaces gráficas utilizando Java Swing e na implementação de mecanismos de persistência de dados.
+
+Outro aspecto relevante do projeto foi a implementação de ferramentas específicas para apoio aos testes, permitindo simular a passagem do tempo de forma controlada. Essa estratégia possibilitou validar corretamente regras relacionadas a atrasos, multas e vencimentos sem comprometer a lógica original da aplicação ou depender da espera do prazo real dos empréstimos.
 
 A estrutura adotada torna o sistema facilmente expansível, permitindo futuras integrações com bancos de dados, serviços externos e novas funcionalidades sem necessidade de grandes alterações na arquitetura existente.
