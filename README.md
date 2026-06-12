@@ -393,11 +393,11 @@ Durante o desenvolvimento surgiram alguns desafios importantes:
 - Tratamento de erros e exceções em entradas inválidas
 - Controle de permissões entre administrador e usuário comum
 - Melhorias na experiência do usuário em buscas e troca de sessão
-- Desenvolvimento de mecanismos para simulação temporal durante os testes de multas e vencimentos, permitindo validar rapidamente funcionalidades que dependeriam de vários dias de execução.
+- Desenvolvimento de mecanismos para simulação temporal durante os testes não estavam funcionando.
 
 ---
 
-# ✅ Test Results
+# ✅ Resultado dos testes
 
 Após a execução do plano de testes, verificou-se que todas as funcionalidades principais apresentaram comportamento esperado.
 
