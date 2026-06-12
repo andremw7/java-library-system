@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Class representing a student in the library system, which includes attributes 
  * for the student's name, RA (registration number), contact information, password, and loan history.
- * * @author André Watanabe
+ * @author André Watanabe
  * @author Pedro Zanutto
  * @author Isaac Ferreira
  * @version 1.0

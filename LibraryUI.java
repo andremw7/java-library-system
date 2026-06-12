@@ -31,29 +31,81 @@ public class LibraryUI extends JFrame {
      * GridBagLayout is used to provide a flexible, grid-based alignment for the forms.
      */
     private final JPanel bookForm = new JPanel(new GridBagLayout());
+    
+    /**
+        * The studentForm panel is designed to hold the input fields and action buttons for managing student records in the library system.
+     */
     private final JPanel studentForm = new JPanel(new GridBagLayout());
 
-    /**
+   /**
      * Book management components, including text fields for entering book details, 
      * buttons for performing actions (add, edit, delete, clear), and a table to display the list of books with sorting capabilities.
      */
     private final JTextField bookSearchField = new JTextField(22);
+
+    /**
+     * Text field used for entering or viewing the main title of a book record.
+     */
     private final JTextField titleField = new JTextField(14);
+
+    /**
+     * Text field used for entering or viewing the author's name of a book record.
+     */
     private final JTextField authorField = new JTextField(14);
+
+    /**
+     * Text field used for entering or viewing the unique International Standard Book Number (ISBN).
+     */
     private final JTextField isbnField = new JTextField(10);
+
+    /**
+     * Text field used for entering or viewing the primary classification or genre of a book.
+     */
     private final JTextField genreField = new JTextField(10);
+
+    /**
+     * Text field used for entering or viewing the initial publication calendar year of a book.
+     */
     private final JTextField yearField = new JTextField(5);
+
+    /**
+     * Text field used for entering or viewing the current total copy quantity available in stock.
+     */
     private final JTextField qtyField = new JTextField(5);
 
-    // Buttons for performing Create, Read, Update, and Delete (CRUD) operations on the book inventory.
+    /**
+     * Button designed to process data entries and add a completely new book into the system archive catalog.
+     */
     private final JButton addBookBtn = new JButton("Adicionar");
+
+    /**
+     * Button designed to commit adjusted changes and edit a currently highlighted or selected book row data.
+     */
     private final JButton editBookBtn = new JButton("Editar");
+
+    /**
+     * Button designed to trigger data purging sequences to permanently delete a chosen book entry from the library inventory.
+     */
     private final JButton deleteBookBtn = new JButton("Excluir");
+
+    /**
+     * Button designed to instantly clear all editable parameter entry components within the book profile field structure.
+     */
     private final JButton clearBookBtn = new JButton("Limpar campos");
 
-    // Table model and components to visualize and sort the cataloged books.
+    /**
+     * Core layout tabular spreadsheet mapping blueprint matrix representing book data inside cellular storage containers.
+     */
     private final DefaultTableModel bookModel = createModel(new String[]{"Título", "Autor", "ISBN", "Gênero", "Ano", "Cópias"});
+
+    /**
+     * Visual tracking element spreadsheet presentation component interface displaying information collections regarding cataloged books.
+     */
     private final JTable bookTable = new JTable(bookModel);
+
+    /**
+     * Alphabetical and numeric structural indexing engine driving dynamic column sequence reorganization for the book inventory spreadsheet.
+     */
     private final TableRowSorter<DefaultTableModel> bookSorter = new TableRowSorter<>(bookModel);
 
     /**
@@ -61,20 +113,60 @@ public class LibraryUI extends JFrame {
      * buttons for performing actions (add, edit, delete, clear), and a table to display the list of users with sorting capabilities.
      */
     private final JTextField patronSearchField = new JTextField(22);
+
+    /**
+     * Text field used for logging, capturing, or managing the full legal registration name of a library consumer.
+     */
     private final JTextField nameField = new JTextField(14);
+
+    /**
+     * Text field used for recording or looking up the specific Academic Registry numerical credential code (ID/RA) of a system borrower.
+     */
     private final JTextField raField = new JTextField(14);
+
+    /**
+     * Text field used for writing, updating, or reviewing personal contact details such as telecommunication lines or virtual emails.
+     */
     private final JTextField contactField = new JTextField(14);
+
+    /**
+     * Obfuscated character input security shield layer handling secure login access credential keys for consumer verification loops.
+     */
     private final JPasswordField passwordField = new JPasswordField(14);
 
-    // Buttons for managing student/patron records within the system.
+    /**
+     * Button handling initialization protocols to register and include a brand new patron profile within system indices.
+     */
     private final JButton addStudentBtn = new JButton("Adicionar");
+
+    /**
+     * Button handling authorization requests to update user attribute specifications currently modified inside management forms.
+     */
     private final JButton editStudentBtn = new JButton("Editar");
+
+    /**
+     * Button handling safe data elimination steps to delete a specified member record path profile from database trees.
+     */
     private final JButton deleteStudentBtn = new JButton("Excluir");
+
+    /**
+     * Button handling comprehensive sweep tasks to clear user credential criteria input parameters from visible panels.
+     */
     private final JButton clearStudentBtn = new JButton("Limpar campos");
 
-    // Table model and components to visualize and sort registered students/users.
+    /**
+     * Cellular structure grid manager framework establishing text data layouts across rows tracking registered active members.
+     */
     private final DefaultTableModel studentModel = createModel(new String[]{"Nome", "ID/RA", "Contato", "Senha"});
+
+    /**
+     * Screen layout rendering container translating raw data values into structured user ledger lists for interface viewing.
+     */
     private final JTable studentTable = new JTable(studentModel);
+
+    /**
+     * Grid ordering filter model controlling row positioning logic when organizing registered user listings dynamically.
+     */
     private final TableRowSorter<DefaultTableModel> studentSorter = new TableRowSorter<>(studentModel);
 
     /**
@@ -91,54 +183,120 @@ public class LibraryUI extends JFrame {
      * enhancing the user experience by providing dynamic search capabilities within the loan creation process.
      */
     private final JTextField bookFilterField = new JTextField(14);
+    
+    /**
+     * Text data monitoring element designed to continuously screen and filter matching listings within the target patron database index combo block.
+     */
     private final JTextField studentFilterField = new JTextField(14);
     
     /**
      * Combo boxes for selecting a book and a student when creating a new loan.
      */
     private final JComboBox<Book> loanBookCombo = new JComboBox<>();
+    
+    /**
+     * Multidirection toggle select component mapping available student profile elements for rapid loan allocation assignments.
+     */
     private final JComboBox<Student> loanStudentCombo = new JComboBox<>();
     
-    // Sub-panel specifically designed to hold the input fields for registering a new loan transaction.
+    /**
+     * Sub-panel specifically designed to hold the input fields for registering a new loan transaction.
+     */
     private final JPanel newLoanFieldsPanel = new JPanel(new GridBagLayout()); 
 
     /**
      * Buttons for performing loan actions: checking out a book, returning a book, and renewing a loan.
      */
     private final JButton checkoutBtn = new JButton("Emprestar");
+
+    /**
+     * Trigger controller tracking resource returns to close outstanding open lending tracking profiles.
+     */
     private final JButton returnBtn = new JButton("Devolver");
+
+    /**
+     * Operational control button initializing safe system algorithms to successfully execute lending time window extension tasks.
+     */
     private final JButton renewBtn = new JButton("Renovar Empréstimo"); 
 
     /**
      * Table model and table for displaying the list of loans, along with a sorter for enabling sorting functionality on the loans table.
      */
     private final DefaultTableModel loanModel = createModel(new String[]{"Livro", "Estudante", "Empréstimo", "Vencimento", "Status"});
+
+    /**
+     * Visual data display module displaying current library resource allocation agreements and return condition pathways.
+     */
     private final JTable loanTable = new JTable(loanModel);
+
+    /**
+     * Analytical alignment matrix filter component used for arranging current loan agreement listings cleanly.
+     */
     private final TableRowSorter<DefaultTableModel> loanSorter = new TableRowSorter<>(loanModel);
 
     /**
      * Report management components, including text fields for searching and filtering reports.
      */
     private final JTextField reportSearchField = new JTextField(22);
+
+    /**
+     * Query filtering element allowing system administrators to narrow tracking data down to an explicit student identifier path.
+     */
     private final JTextField reportPatronField = new JTextField(10);
     
-    // FlowLayout panel to align the patron-specific report search components to the left side.
+    /**
+     * FlowLayout panel to align the patron-specific report search components to the left side.
+     */
     private final JPanel reportPatronPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0)); 
 
     /**
      * Buttons for filtering reports based on different operational criteria.
      */
     private final JButton showActiveLoansBtn = new JButton("Ativos");
+
+    /**
+     * Operational constraint trigger isolating database entries showing past due timelines with unresolved liabilities.
+     */
     private final JButton showOverdueLoansBtn = new JButton("Atrasados");
+
+    /**
+     * Administrative switch loading unconstrained historic trace logging logs archiving every recorded lending occurrence.
+     */
     private final JButton showAllHistoryBtn = new JButton("Histórico Geral");
+
+    /**
+     * Selective extraction module executing precise lookups strictly tracking isolated consumer account history archives.
+     */
     private final JButton showPatronHistoryBtn = new JButton("Buscar por ID/RA");
+
+    /**
+     * Administrative privilege tool reset mechanism purging accrued penalty fine accumulations back to standard zero balance formats.
+     */
     private final JButton resetFineBtn = new JButton("Resetar Multa");
+
+    /**
+     * Simulation runtime command button shifting calendar settings ahead by exactly fifteen consecutive timeline units for stress testing.
+     */
+    private final JButton advanceTimeBtn = new JButton("Avançar 15 Dias");
+
+    /**
+     * Simulation runtime command button pulling calendar settings backward by exactly fifteen consecutive timeline units to restore tracking data.
+     */
+    private final JButton reverseTimeBtn = new JButton("Voltar 15 Dias");
 
     /**
      * Table model and table for displaying the list of reports, along with a sorter for enabling sorting functionality on the reports table.
      */
     private final DefaultTableModel reportModel = createModel(new String[]{"Livro", "Estudante", "ID/RA", "Empréstimo", "Vencimento", "Devolução", "Multa", "Status"});
+
+    /**
+     * Main accounting matrix interface table mapping high density financial and log statistics onto an easily readable graphical summary spreadsheet.
+     */
     private final JTable reportTable = new JTable(reportModel);
+
+    /**
+     * Dynamic indexing sorting utility controlling the viewing arrangement orders of analytics data collections.
+     */
     private final TableRowSorter<DefaultTableModel> reportSorter = new TableRowSorter<>(reportModel);
 
     /**
@@ -450,6 +608,16 @@ public class LibraryUI extends JFrame {
         buttonRow.add(showOverdueLoansBtn);
         buttonRow.add(showAllHistoryBtn);
         buttonRow.add(resetFineBtn); 
+        // Checks if the current user has the admin role using the class variable
+        boolean isAdmin = "admin".equalsIgnoreCase(userRole);
+        
+        // Sets the visibility of the buttons (Admin only)
+        advanceTimeBtn.setVisible(isAdmin);
+        reverseTimeBtn.setVisible(isAdmin);
+        
+        // Adds the time simulation buttons to the panel
+        buttonRow.add(advanceTimeBtn);
+        buttonRow.add(reverseTimeBtn);
 
         // Adding the search row and the button row to the controls panel, 
         // which will be placed at the top of the reports tab.
@@ -783,5 +951,17 @@ public class LibraryUI extends JFrame {
      * * @return The TableRowSorter for the report table.
      */
     public TableRowSorter<DefaultTableModel> getReportSorter() { return reportSorter; }
-    
+
+    /**
+     * Gets the button used to advance time in the simulation.
+     * * @return The advance time JButton object.
+     */
+    public JButton getAdvanceTimeBtn() { return advanceTimeBtn; }
+
+    /**
+     * Gets the button used to reverse time in the simulation.
+     * * @return The reverse time JButton object.
+     */
+    public JButton getReverseTimeBtn() { return reverseTimeBtn; }
 }
+    

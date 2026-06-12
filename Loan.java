@@ -131,6 +131,14 @@ public class Loan implements Serializable {
     }
 
     /**
+     * Define a new loan date, useful for system testing and time simulation.
+     * * @param loanDate the new loan date to set
+     */
+    public void setLoanDate(LocalDate loanDate) {
+        this.loanDate = loanDate;
+    }
+
+    /**
      * Date when the book was returned. This will be null if the book has not yet been returned.
      * 
      * @return The date when the book was returned, or null if not yet returned.
@@ -220,6 +228,10 @@ public class Loan implements Serializable {
      */
     public String getStatus() {
         if (!isActive()) {
+            // If the book has already been returned, was overdue in the past, and the fine was waived
+            if (finePaid && getDaysOverdue() > 0) {
+                return "DEVOLVIDO COM MULTA RESETADA";
+            }
             return calculateFine() > 0 ? "DEVOLVIDO COM MULTA" : "DEVOLVIDO";
         }
         if (isOverdue()) {

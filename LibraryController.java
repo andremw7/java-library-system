@@ -165,6 +165,7 @@ public class LibraryController {
             // Librarian CANNOT reset fines. This is an Admin exclusive feature.
             view.getResetFineBtn().setVisible(false);
 
+        
             JOptionPane.showMessageDialog(view,
                     "Você acessou como Bibliotecário.\nOperações diárias liberadas. Funções de Adicionar/Editar Livros e Usuários estão desativadas.",
                     "Controle de Acesso", JOptionPane.INFORMATION_MESSAGE);
@@ -285,6 +286,15 @@ public class LibraryController {
             refreshReports();
         });
         view.getResetFineBtn().addActionListener(e -> runSafely(this::resetFine));
+
+        // Action listeners for time simulation (Admin only)
+        // These are safely wrapped to catch any unexpected errors during the simulation
+        if (view.getAdvanceTimeBtn() != null) {
+            view.getAdvanceTimeBtn().addActionListener(e -> runSafely(this::testAdvanceTime));
+        }
+        if (view.getReverseTimeBtn() != null) {
+            view.getReverseTimeBtn().addActionListener(e -> runSafely(this::testReverseTime));
+        }
     }
 
     /**
@@ -672,17 +682,23 @@ public class LibraryController {
         int modelRow = view.getReportTable().convertRowIndexToModel(row);
         Loan selected = currentReportLoans.get(modelRow);
 
-        // An admin should not be able to reset fines that are already paid or that do not have any fine, 
-        // as this would be an illogical operation and could indicate a misuse of the system's functionalities.
         if (selected.calculateFine() <= 0 || selected.isFinePaid()) {
             throw new IllegalArgumentException("Este registro não possui nenhuma multa pendente para ser resetada.");
         }
 
-        if (confirm("Deseja perdoar/marcar como paga a multa deste registro?")) {
+        if (confirm("Deseja perdoar a multa? Se o livro ainda não foi devolvido, ele será devolvido automaticamente para o acervo.")) {
+            // 1. Mark the fine as paid
             selected.setFinePaid(true);
+            
+            // 2. If the loan is still active (book not yet returned), automatically force the return
+            if (selected.isActive()) {
+                library.performReturn(selected);
+            }
+            
             DataManager.save(library);
-            refreshReports();
-            showInfo("Multa atualizada com sucesso.");
+            // Changed from refreshReports() to refreshAll() because the book quantity in the inventory has been updated
+            refreshAll(); 
+            showInfo("Multa perdoada e livro devolvido com sucesso.");
         }
     }
 
@@ -843,6 +859,84 @@ public class LibraryController {
         return String.format("R$ %.2f", value);
     }
 
+    /**
+     * Simulates advancing 15 days in time by shifting the dates of active loans 
+     * 15 days into the past. This forces the system to dynamically calculate fines and overdue statuses.
+     */
+    private void testAdvanceTime() {
+        if (confirm("Deseja simular o avanço de 15 dias no tempo para testar os atrasos de empréstimos?")) {
+            int changedLoans = 0;
+            
+            for (Loan l : library.getLoans()) {
+                if (l.isActive()) {
+                    l.setLoanDate(l.getLoanDate().minusDays(15));
+                    l.setDueDate(l.getDueDate().minusDays(15));
+                    changedLoans++;
+                }
+            }
+            
+            // Saves the changes to the data storage file
+            DataManager.save(library);
+            // Immediately refreshes all components, tables, and views in the interface
+            refreshAll(); 
+            
+            // Provides clear visual feedback based on whether active loans were found
+            if (changedLoans == 0) {
+                showInfo("Simulação executada com sucesso!\nPorém, não existem empréstimos ATIVOS no sistema para simular o atraso.\n\nDica: Vá até a conta de um Bibliotecário, faça um novo empréstimo e volte aqui para avançar o tempo.");
+            } else {
+                showInfo("Simulação concluída!\nAvançamos 15 dias no tempo para " + changedLoans + " empréstimo(s) ativo(s).\nVerifique o status de 'Atrasado' e os valores de multa atualizados nas tabelas.");
+            }
+        }
+    }
+
+    /**
+     * Reverts the time simulation by moving the dates of active loans 15 days forward,
+     * strictly limiting the adjustment to the computer's actual current date to prevent data corruption.
+     */
+    private void testReverseTime() {
+        if (confirm("Deseja voltar 15 dias no tempo (desfazer a simulação)?")) {
+            int changedLoans = 0;
+            boolean limitReached = false;
+            java.time.LocalDate realTodayDate = java.time.LocalDate.now();
+            
+            for (Loan l : library.getLoans()) {
+                if (l.isActive()) {
+                    // Calculates the projected new simulated loan date forward
+                    java.time.LocalDate newLoanDate = l.getLoanDate().plusDays(15);
+                    
+                    // Safety check: If the projected date exceeds the computer's actual real date, block the change
+                    if (newLoanDate.isAfter(realTodayDate)) {
+                        limitReached = true;
+                        continue; 
+                    }
+                    
+                    l.setLoanDate(newLoanDate);
+                    l.setDueDate(l.getDueDate().plusDays(15));
+                    changedLoans++;
+                }
+            }
+            
+            // Persists the corrected simulation state to the data file
+            DataManager.save(library);
+            // Synchronizes and updates the table models across the interface
+            refreshAll(); 
+            
+            // Intelligent contextual messaging based on the results of the reverse operation
+            if (changedLoans == 0) {
+                if (limitReached) {
+                    showError("Não é possível voltar mais no tempo!\nO sistema já se encontra na data original/real do computador.");
+                } else {
+                    showInfo("Não existem empréstimos ativos pendentes para reverter o tempo.");
+                }
+            } else {
+                String message = "Simulação revertida com sucesso!\nVoltamos 15 dias no tempo para " + changedLoans + " empréstimo(s).";
+                if (limitReached) {
+                    message += "\n\nNota: Alguns registros foram mantidos na data real para evitar inconsistência de dados.";
+                }
+                showInfo(message);
+            }
+        }
+    }
     /**
      * Safely transforms dates into readable strings or fallback hyphens if the date is null, 
      * ensuring that the interface displays consistent and user-friendly date information without showing raw null values.

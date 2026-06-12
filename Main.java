@@ -6,7 +6,7 @@ import javax.swing.UIManager;
  *
  * <p>This class initializes the graphical interface, loads the persisted
  * library data, and starts the user authentication and session workflow.</p>
- * * @author André Watanabe
+ * @author André Watanabe
  * @author Pedro Zanutto
  * @author Isaac Ferreira
  * @version 1.0
