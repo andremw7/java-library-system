@@ -421,7 +421,7 @@ Os resultados obtidos foram:
 | Relatórios | ✅ Sucesso |
 | Persistência após reinicialização | ✅ Sucesso |
 | Controle de permissões | ✅ Sucesso |
-| Simulaçao avançar e voltar a data original | ✅ Sucesso |
+| Simulação de avanço e restauração da data | ✅ Sucesso |
 
 Durante os testes foram identificados pequenos problemas relacionados ao comportamento de alguns botões da interface, sincronização dos dados persistidos e organização visual dos componentes. Após as correções realizadas durante o desenvolvimento, o sistema apresentou funcionamento estável e consistente.
 
