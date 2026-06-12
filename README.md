@@ -184,9 +184,9 @@ biblioteca_dados.dat
 
 ```
 
-Durante o encerramento da aplicação, todas as alterações realizadas são automaticamente serializadas nesse arquivo.
+Durante o encerramento da aplicação, todas as alterações realizadas são automaticamente serializadas nesse arquivo. Ao iniciar novamente o sistema, os dados são restaurados, preservando livros cadastrados, usuários, empréstimos ativos, histórico e demais informações armazenadas anteriormente.
 
-Ao iniciar novamente o sistema, os dados são restaurados, preservando livros cadastrados, usuários, empréstimos ativos, histórico e demais informações armazenadas anteriormente.
+
 ---
 
 # 🧠 Estrutura do Projeto
@@ -366,6 +366,8 @@ flowchart TD
 16. Testar permissões de usuário
 17. Testar renovação de empréstimo como usuário comum
 18. Reiniciar sistema e validar persistência
+19. Verificar atrávés de botões de simulação de tempo, a lógica da aplicação de multas.
+20. Verificar como o Administrador reseta a multa
 
 ---
 
