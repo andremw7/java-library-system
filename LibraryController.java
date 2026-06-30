@@ -116,6 +116,7 @@ public class LibraryController {
             view.getShowPatronHistoryBtn().setVisible(false);
             view.getResetFineBtn().setVisible(false);
             view.getReportPatronField().setVisible(false);
+            view.getReportSearchField().setVisible(false);
             if (view.getReportPatronPanel() != null) {
                 view.getReportPatronPanel().setVisible(false);
             }
